@@ -69,12 +69,12 @@ pub fn erp_compat_traj_dist(
 
     // Compute centroid if g is None
     let gap_point = if let Some(g_vec) = g {
-        if g_vec.len() != 2 {
+        if g_vec.len() != 3 {
             return Err(PyValueError::new_err(
-                "Gap point g must have exactly 2 coordinates",
+                "Gap point g must have exactly 3 coordinates",
             ));
         }
-        [g_vec[0], g_vec[1]]
+        [g_vec[0], g_vec[1], g_vec[2]]
     } else {
         // Compute centroid of both trajectories
         let n1 = traj1.len();
@@ -87,21 +87,24 @@ pub fn erp_compat_traj_dist(
 
         let mut sum_x = 0.0;
         let mut sum_y = 0.0;
+        let mut sum_z = 0.0;
 
         for i in 0..n1 {
             let p = traj1.get(i);
             sum_x += p.x();
             sum_y += p.y();
+            sum_z += p.z();
         }
 
         for j in 0..n2 {
             let p = traj2.get(j);
             sum_x += p.x();
             sum_y += p.y();
+            sum_z += p.z();
         }
 
         let total = (n1 + n2) as f64;
-        [sum_x / total, sum_y / total]
+        [sum_x / total, sum_y / total, sum_z / total]
     };
 
     // Parse distance type using FromStr from strum
@@ -181,12 +184,12 @@ pub fn erp_standard(
 
     // Compute centroid if g is None
     let gap_point = if let Some(g_vec) = g {
-        if g_vec.len() != 2 {
+        if g_vec.len() != 3 {
             return Err(PyValueError::new_err(
-                "Gap point g must have exactly 2 coordinates",
+                "Gap point g must have exactly 3 coordinates",
             ));
         }
-        [g_vec[0], g_vec[1]]
+        [g_vec[0], g_vec[1], g_vec[2]]
     } else {
         // Compute centroid of both trajectories
         let n1 = traj1.len();
@@ -199,21 +202,24 @@ pub fn erp_standard(
 
         let mut sum_x = 0.0;
         let mut sum_y = 0.0;
+        let mut sum_z = 0.0;
 
         for i in 0..n1 {
             let p = traj1.get(i);
             sum_x += p.x();
             sum_y += p.y();
+            sum_z += p.z();
         }
 
         for j in 0..n2 {
             let p = traj2.get(j);
             sum_x += p.x();
             sum_y += p.y();
+            sum_z += p.z();
         }
 
         let total = (n1 + n2) as f64;
-        [sum_x / total, sum_y / total]
+        [sum_x / total, sum_y / total, sum_z / total]
     };
 
     // Parse distance type using FromStr from strum

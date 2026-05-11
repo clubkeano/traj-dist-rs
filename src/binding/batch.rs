@@ -100,12 +100,12 @@ impl PyMetric {
     #[staticmethod]
     #[pyo3(signature = (g, type_d = "euclidean"))]
     fn erp(g: Vec<f64>, type_d: &str) -> PyResult<Self> {
-        if g.len() < 2 {
+        if g.len() < 3 {
             return Err(PyValueError::new_err(
-                "ERP 'g' parameter must have at least 2 elements.",
+                "ERP 'g' parameter must have at least 3 elements.",
             ));
         }
-        let algorithm = DistanceAlgorithm::ERP { g: [g[0], g[1]] };
+        let algorithm = DistanceAlgorithm::ERP { g: [g[0], g[1], g[2]] };
         let calculator = build_calculator(algorithm, type_d)?;
         Ok(Self { inner: calculator })
     }

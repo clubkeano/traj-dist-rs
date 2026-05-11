@@ -11,9 +11,9 @@
 //!
 //! ## Formula
 //!
-//! Euclidean distance between points (x₁, y₁) and (x₂, y₂):
+//! Euclidean distance between points (x₁, y₁, z₁) and (x₂, y₂, z₂):
 //! ```text
-//! d = √[(x₂-x₁)² + (y₂-y₁)²]
+//! d = √[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]
 //! ```
 //!
 //! ## Usage
@@ -21,8 +21,8 @@
 //! ```rust
 //! use traj_dist_rs::distance::euclidean::euclidean_distance;
 //!
-//! let p1 = [0.0, 0.0];
-//! let p2 = [3.0, 4.0];
+//! let p1 = [0.0, 0.0, 0.0];
+//! let p2 = [3.0, 4.0, 5.0];
 //! let dist = euclidean_distance(&p1, &p2);
 //! assert_eq!(dist, 5.0);
 //! ```
@@ -31,11 +31,12 @@ use crate::traits::{AsCoord, CoordSequence};
 
 /// Euclidean distance between two points
 ///
-/// Uses the standard Euclidean distance formula: √[(x₂-x₁)² + (y₂-y₁)²]
+/// Uses the standard Euclidean distance formula: √[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]
 pub fn euclidean_distance<C: AsCoord, D: AsCoord>(p1: &C, p2: &D) -> f64 {
     let dx = p1.x() - p2.x();
     let dy = p1.y() - p2.y();
-    (dx * dx + dy * dy).sqrt()
+    let dz = p1.z() - p2.z();
+    (dx * dx + dy * dy + dz * dz).sqrt()
 }
 
 /// Compute pairwise Euclidean distances between two trajectories
@@ -74,9 +75,12 @@ pub fn point_to_segment<C: AsCoord>(
     // Project point onto the line segment
     let dx = seg_end.x() - seg_start.x();
     let dy = seg_end.y() - seg_start.y();
+    let dz = seg_end.z() - seg_start.z();
 
-    let t =
-        ((point.x() - seg_start.x()) * dx + (point.y() - seg_start.y()) * dy) / (seg_len * seg_len);
+    let t = ((point.x() - seg_start.x()) * dx
+        + (point.y() - seg_start.y()) * dy
+        + (point.z() - seg_start.z()) * dz)
+        / (seg_len * seg_len);
 
     if t <= 0.00001 || t >= 1.0 {
         // closest point does not fall within the line segment, take the shorter distance to an endpoint
@@ -85,9 +89,11 @@ pub fn point_to_segment<C: AsCoord>(
         // Intersecting point is on the line, use the formula
         let proj_x = seg_start.x() + t * dx;
         let proj_y = seg_start.y() + t * dy;
+        let proj_z = seg_start.z() + t * dz;
         let dx2 = point.x() - proj_x;
         let dy2 = point.y() - proj_y;
-        (dx2 * dx2 + dy2 * dy2).sqrt()
+        let dz2 = point.z() - proj_z;
+        (dx2 * dx2 + dy2 * dy2 + dz2 * dz2).sqrt()
     }
 }
 
@@ -111,43 +117,48 @@ pub fn point_to_segment<C: AsCoord>(
 /// ```rust
 /// use traj_dist_rs::distance::euclidean::project_point_to_segment;
 ///
-/// let point = [0.0, 1.0];
-/// let seg_start = [0.0, 0.0];
-/// let seg_end = [2.0, 0.0];
+/// let point = [0.0, 1.0, 0.0];
+/// let seg_start = [0.0, 0.0, 0.0];
+/// let seg_end = [2.0, 0.0, 0.0];
 ///
 /// let projected = project_point_to_segment(&point, &seg_start, &seg_end);
-/// assert_eq!(projected, (0.0, 0.0)); // Projects onto the segment at x=0
+/// assert_eq!(projected, (0.0, 0.0, 0.0)); // Projects onto the segment at x=0
 /// ```
 pub fn project_point_to_segment<C: AsCoord, D: AsCoord, E: AsCoord>(
     point: &C,
     seg_start: &D,
     seg_end: &E,
-) -> (f64, f64) {
+) -> (f64, f64, f64) {
     let dx = seg_end.x() - seg_start.x();
     let dy = seg_end.y() - seg_start.y();
+    let dz = seg_end.z() - seg_start.z();
 
-    let l2 = dx * dx + dy * dy;
+    let l2 = dx * dx + dy * dy + dz * dz;
 
     if l2 == 0.0 {
         // Segment is degenerate (zero length), return the projected point itself
         // This matches the Python _line_map behavior: when l2==0, return p (the point being projected)
-        return (point.x(), point.y());
+        return (point.x(), point.y(), point.z());
     }
 
     // Compute projection parameter t
-    let t = ((point.x() - seg_start.x()) * dx + (point.y() - seg_start.y()) * dy) / l2;
+    let t = ((point.x() - seg_start.x()) * dx
+        + (point.y() - seg_start.y()) * dy
+        + (point.z() - seg_start.z()) * dz)
+        / l2;
 
     if t < 0.0 {
         // Projection falls before the segment, return start point
-        (seg_start.x(), seg_start.y())
+        (seg_start.x(), seg_start.y(), seg_start.z())
     } else if t > 1.0 {
         // Projection falls after the segment, return end point
-        (seg_end.x(), seg_end.y())
+        (seg_end.x(), seg_end.y(), seg_end.z())
     } else {
         // Projection falls within the segment, compute projected point
         let proj_x = seg_start.x() + t * dx;
         let proj_y = seg_start.y() + t * dy;
-        (proj_x, proj_y)
+        let proj_z = seg_start.z() + t * dz;
+        (proj_x, proj_y, proj_z)
     }
 }
 
@@ -232,18 +243,22 @@ pub fn point_to_segment_distance<C: AsCoord, D: AsCoord, E: AsCoord>(
 ) -> f64 {
     let s1x = seg_start.x();
     let s1y = seg_start.y();
+    let s1z = seg_start.z();
     let s2x = seg_end.x();
     let s2y = seg_end.y();
+    let s2z = seg_end.z();
 
-    if s1x == s2x && s1y == s2y {
+    if s1x == s2x && s1y == s2y && s1z == s2z {
         return euclidean_distance(point, seg_start);
     }
 
     let dx = s2x - s1x;
     let dy = s2y - s1y;
-    let seg_len_sq = dx * dx + dy * dy;
+    let dz = s2z - s1z;
+    let seg_len_sq = dx * dx + dy * dy + dz * dz;
 
-    let u = ((point.x() - s1x) * dx + (point.y() - s1y) * dy) / seg_len_sq;
+    let u = ((point.x() - s1x) * dx + (point.y() - s1y) * dy + (point.z() - s1z) * dz)
+        / seg_len_sq;
 
     if !(0.00001..=1.0).contains(&u) {
         // Closest point does not fall within the segment
@@ -251,9 +266,11 @@ pub fn point_to_segment_distance<C: AsCoord, D: AsCoord, E: AsCoord>(
     } else {
         let proj_x = s1x + u * dx;
         let proj_y = s1y + u * dy;
+        let proj_z = s1z + u * dz;
         let dpx = point.x() - proj_x;
         let dpy = point.y() - proj_y;
-        (dpx * dpx + dpy * dpy).sqrt()
+        let dpz = point.z() - proj_z;
+        (dpx * dpx + dpy * dpy + dpz * dpz).sqrt()
     }
 }
 
@@ -306,17 +323,17 @@ mod tests {
 
     #[test]
     fn test_euclidean_distance() {
-        let p1: [f64; 2] = [0.0, 0.0];
-        let p2: [f64; 2] = [3.0, 4.0];
+        let p1: [f64; 3] = [0.0, 0.0, 0.0];
+        let p2: [f64; 3] = [3.0, 4.0, 0.0];
         let dist = euclidean_distance(&p1, &p2);
         assert!((dist - 5.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_point_to_segment() {
-        let point: [f64; 2] = [0.0, 1.0];
-        let seg_start: [f64; 2] = [0.0, 0.0];
-        let seg_end: [f64; 2] = [2.0, 0.0];
+        let point: [f64; 3] = [0.0, 1.0, 0.0];
+        let seg_start: [f64; 3] = [0.0, 0.0, 0.0];
+        let seg_end: [f64; 3] = [2.0, 0.0, 0.0];
         let d_start = 1.0;
         let d_end = 5.0;
         let seg_len = 2.0;

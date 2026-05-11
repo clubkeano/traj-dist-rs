@@ -26,8 +26,8 @@ use crate::traits::{AsCoord, CoordSequence};
 /// ```rust
 /// use traj_dist_rs::distance::edwp::edwp;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-/// let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+/// let traj2 = vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]];
 ///
 /// let result = edwp(&traj1, &traj2, false);
 /// println!("EDwP distance: {}", result.distance);
@@ -85,8 +85,8 @@ where
     // Initialize DP matrix and auxiliary matrices
     let mut value = vec![vec![0.0; t2_len]; t1_len];
     let mut delta = vec![vec![0.0; t2_len]; t1_len];
-    let mut col_edits = vec![vec![(0.0, 0.0); t2_len]; t1_len];
-    let mut row_edits = vec![vec![(0.0, 0.0); t2_len]; t1_len];
+    let mut col_edits = vec![vec![(0.0, 0.0, 0.0); t2_len]; t1_len];
+    let mut row_edits = vec![vec![(0.0, 0.0, 0.0); t2_len]; t1_len];
 
     // Initialize first row and column
     value[0][1..].fill(f64::MAX);
@@ -101,22 +101,22 @@ where
             let mut col_delta = f64::MAX;
             let mut row_spatial_score = f64::MAX;
             let mut col_spatial_score = f64::MAX;
-            let mut t1_insert: Option<(f64, f64)> = None;
-            let mut t2_insert: Option<(f64, f64)> = None;
+            let mut t1_insert: Option<(f64, f64, f64)> = None;
+            let mut t2_insert: Option<(f64, f64, f64)> = None;
 
             // Row operation (insert from traj2)
             if i > 1 {
                 let t1_edit = row_edits[i - 1][j];
                 let t2_edit = col_edits[i - 1][j];
-                let t1_edit_arr = [t1_edit.0, t1_edit.1];
-                let t2_edit_arr = [t2_edit.0, t2_edit.1];
+                let t1_edit_arr = [t1_edit.0, t1_edit.1, t1_edit.2];
+                let t2_edit_arr = [t2_edit.0, t2_edit.1, t2_edit.2];
                 let prev_point_edge = euclidean_distance(&traj1.get(i - 1), &t1_edit_arr);
 
                 // Project point onto segment (equivalent to _line_map in Python)
                 // _line_map(p1=t2_edit, p2=t2[j], p=t1[i-1])
                 let projected =
                     project_point_to_segment(&traj1.get(i - 1), &t2_edit_arr, &traj2.get(j));
-                let t2_insert_arr = [projected.0, projected.1];
+                let t2_insert_arr = [projected.0, projected.1, projected.2];
                 t2_insert = Some(projected);
 
                 let row_edit_distance = euclidean_distance(&traj1.get(i - 1), &t2_insert_arr);
@@ -139,8 +139,8 @@ where
             if j > 1 {
                 let t1_edit = row_edits[i][j - 1];
                 let t2_edit = col_edits[i][j - 1];
-                let t1_edit_arr = [t1_edit.0, t1_edit.1];
-                let t2_edit_arr = [t2_edit.0, t2_edit.1];
+                let t1_edit_arr = [t1_edit.0, t1_edit.1, t1_edit.2];
+                let t2_edit_arr = [t2_edit.0, t2_edit.1, t2_edit.2];
 
                 let prev_point_edge = euclidean_distance(&traj2.get(j - 1), &t2_edit_arr);
 
@@ -148,7 +148,7 @@ where
                 // _line_map(p1=t1_edit, p2=t1[i], p=t2[j-1])
                 let projected =
                     project_point_to_segment(&traj2.get(j - 1), &t1_edit_arr, &traj1.get(i));
-                let t1_insert_arr = [projected.0, projected.1];
+                let t1_insert_arr = [projected.0, projected.1, projected.2];
                 t1_insert = Some(projected);
 
                 let col_edit_distance = euclidean_distance(&traj2.get(j - 1), &t1_insert_arr);
@@ -178,20 +178,20 @@ where
             if diag_score <= col_spatial_score && diag_score <= row_spatial_score {
                 value[i][j] = diag_score;
                 delta[i][j] = diag_score - value[i - 1][j - 1];
-                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y());
-                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y());
+                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
+                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
             } else if col_spatial_score < row_spatial_score
                 || (col_spatial_score == row_spatial_score && t2_len > t1_len)
             {
                 value[i][j] = col_spatial_score;
                 delta[i][j] = col_spatial_score - col_delta;
-                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y());
-                row_edits[i][j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y()));
+                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
+                row_edits[i][j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
             } else {
                 value[i][j] = row_spatial_score;
                 delta[i][j] = row_spatial_score - row_delta;
-                col_edits[i][j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y()));
-                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y());
+                col_edits[i][j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
+                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
             }
         }
     }
@@ -239,13 +239,13 @@ where
     // Initialize DP arrays
     let mut prev_value = vec![f64::MAX; t2_len];
     let mut prev_delta = vec![0.0; t2_len];
-    let mut prev_col_edits = vec![(0.0, 0.0); t2_len];
-    let mut prev_row_edits = vec![(0.0, 0.0); t2_len];
+    let mut prev_col_edits = vec![(0.0, 0.0, 0.0); t2_len];
+    let mut prev_row_edits = vec![(0.0, 0.0, 0.0); t2_len];
 
     let mut curr_value = vec![f64::MAX; t2_len];
     let mut curr_delta = vec![0.0; t2_len];
-    let mut curr_col_edits = vec![(0.0, 0.0); t2_len];
-    let mut curr_row_edits = vec![(0.0, 0.0); t2_len];
+    let mut curr_col_edits = vec![(0.0, 0.0, 0.0); t2_len];
+    let mut curr_row_edits = vec![(0.0, 0.0, 0.0); t2_len];
 
     // Initialize first row (value[0][0] = 0.0, value[0][1:] = f64::MAX)
     prev_value[0] = 0.0;
@@ -259,22 +259,22 @@ where
             let mut col_delta = f64::MAX;
             let mut row_spatial_score = f64::MAX;
             let mut col_spatial_score = f64::MAX;
-            let mut t1_insert: Option<(f64, f64)> = None;
-            let mut t2_insert: Option<(f64, f64)> = None;
+            let mut t1_insert: Option<(f64, f64, f64)> = None;
+            let mut t2_insert: Option<(f64, f64, f64)> = None;
 
             // Row operation (insert from traj2)
             if i > 1 {
                 let t1_edit = prev_row_edits[j];
                 let t2_edit = prev_col_edits[j];
-                let t1_edit_arr = [t1_edit.0, t1_edit.1];
-                let t2_edit_arr = [t2_edit.0, t2_edit.1];
+                let t1_edit_arr = [t1_edit.0, t1_edit.1, t1_edit.2];
+                let t2_edit_arr = [t2_edit.0, t2_edit.1, t2_edit.2];
                 let prev_point_edge = euclidean_distance(&traj1.get(i - 1), &t1_edit_arr);
 
                 // Project point onto segment (equivalent to _line_map in Python)
                 // _line_map(p1=t2_edit, p2=t2[j], p=t1[i-1])
                 let projected =
                     project_point_to_segment(&traj1.get(i - 1), &t2_edit_arr, &traj2.get(j));
-                let t2_insert_arr = [projected.0, projected.1];
+                let t2_insert_arr = [projected.0, projected.1, projected.2];
                 t2_insert = Some(projected);
 
                 let row_edit_distance = euclidean_distance(&traj1.get(i - 1), &t2_insert_arr);
@@ -297,8 +297,8 @@ where
             if j > 1 {
                 let t1_edit = curr_row_edits[j - 1];
                 let t2_edit = curr_col_edits[j - 1];
-                let t1_edit_arr = [t1_edit.0, t1_edit.1];
-                let t2_edit_arr = [t2_edit.0, t2_edit.1];
+                let t1_edit_arr = [t1_edit.0, t1_edit.1, t1_edit.2];
+                let t2_edit_arr = [t2_edit.0, t2_edit.1, t2_edit.2];
 
                 let prev_point_edge = euclidean_distance(&traj2.get(j - 1), &t2_edit_arr);
 
@@ -306,7 +306,7 @@ where
                 // _line_map(p1=t1_edit, p2=t1[i], p=t2[j-1])
                 let projected =
                     project_point_to_segment(&traj2.get(j - 1), &t1_edit_arr, &traj1.get(i));
-                let t1_insert_arr = [projected.0, projected.1];
+                let t1_insert_arr = [projected.0, projected.1, projected.2];
                 t1_insert = Some(projected);
 
                 let col_edit_distance = euclidean_distance(&traj2.get(j - 1), &t1_insert_arr);
@@ -336,20 +336,20 @@ where
             if diag_score <= col_spatial_score && diag_score <= row_spatial_score {
                 curr_value[j] = diag_score;
                 curr_delta[j] = diag_score - prev_value[j - 1];
-                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y());
-                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y());
+                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
+                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
             } else if col_spatial_score < row_spatial_score
                 || (col_spatial_score == row_spatial_score && t2_len > t1_len)
             {
                 curr_value[j] = col_spatial_score;
                 curr_delta[j] = col_spatial_score - col_delta;
-                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y());
-                curr_row_edits[j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y()));
+                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
+                curr_row_edits[j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
             } else {
                 curr_value[j] = row_spatial_score;
                 curr_delta[j] = row_spatial_score - row_delta;
-                curr_col_edits[j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y()));
-                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y());
+                curr_col_edits[j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
+                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
             }
         }
 

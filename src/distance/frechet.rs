@@ -27,7 +27,7 @@
 //! Spherical distance is not supported.
 
 use crate::distance::euclidean::{
-    circle_line_intersection, euclidean_distance, point_to_segment_distance,
+    euclidean_distance, point_to_segment_distance,
 };
 use crate::traits::{AsCoord, CoordSequence};
 
@@ -41,15 +41,13 @@ fn free_line<C: AsCoord, D: AsCoord, E: AsCoord>(
     seg_end: &E,
     eps: f64,
 ) -> Option<(f64, f64)> {
-    let px = point.x();
-    let py = point.y();
-    let s1x = seg_start.x();
-    let s1y = seg_start.y();
-    let s2x = seg_end.x();
-    let s2y = seg_end.y();
+    let dx = seg_end.x() - seg_start.x();
+    let dy = seg_end.y() - seg_start.y();
+    let dz = seg_end.z() - seg_start.z();
 
     // Degenerate segment (single point)
-    if s1x == s2x && s1y == s2y {
+    let segl_sq = dx * dx + dy * dy + dz * dz;
+    if segl_sq == 0.0 {
         if euclidean_distance(point, seg_start) > eps {
             return None;
         } else {
@@ -62,38 +60,39 @@ fn free_line<C: AsCoord, D: AsCoord, E: AsCoord>(
         return None;
     }
 
-    // Compute circle-line intersection
-    let intersections = circle_line_intersection(px, py, s1x, s1y, s2x, s2y, eps);
-    let (i1x, i1y) = intersections[0];
-    let (i2x, i2y) = intersections[1];
+    // Solve |P - S1 - t*D|^2 = eps^2 parametrically (works for any dimension)
+    // Let Q = S1 - P:  t^2*|D|^2 + 2t*(Q·D) + |Q|^2 - eps^2 = 0
+    let qx = seg_start.x() - point.x();
+    let qy = seg_start.y() - point.y();
+    let qz = seg_start.z() - point.z();
 
-    let dx = s2x - s1x;
-    let dy = s2y - s1y;
-    let segl_sq = dx * dx + dy * dy;
+    let a = segl_sq;
+    let b = 2.0 * (qx * dx + qy * dy + qz * dz);
+    let c = qx * qx + qy * qy + qz * qz - eps * eps;
 
-    if i1x != i2x || i1y != i2y {
-        // Two distinct intersection points
-        let u1 = ((i1x - s1x) * dx + (i1y - s1y) * dy) / segl_sq;
-        let u2 = ((i2x - s1x) * dx + (i2y - s1y) * dy) / segl_sq;
+    let discriminant = b * b - 4.0 * a * c;
 
+    if discriminant < 0.0 {
+        // No intersection (shouldn't happen since we already checked distance)
+        return None;
+    }
+
+    let sd = discriminant.sqrt();
+    let u1 = (-b - sd) / (2.0 * a);
+    let u2 = (-b + sd) / (2.0 * a);
+
+    if (u1 - u2).abs() < f64::EPSILON {
+        // Tangent case
+        if (0.0..=1.0).contains(&u1) {
+            Some((u1, u1))
+        } else {
+            None
+        }
+    } else {
         // Sort [0, 1, u1, u2] and take middle two
         let mut sorted = [0.0_f64, 1.0, u1, u2];
         sorted.sort_by(|a, b| a.total_cmp(b));
         Some((sorted[1], sorted[2]))
-    } else {
-        // Single intersection point (tangent)
-        if px == s1x && py == s1y {
-            Some((0.0, 0.0))
-        } else if px == s2x && py == s2y {
-            Some((1.0, 1.0))
-        } else {
-            let u1 = ((i1x - s1x) * dx + (i1y - s1y) * dy) / segl_sq;
-            if (0.0..=1.0).contains(&u1) {
-                Some((u1, u1))
-            } else {
-                None
-            }
-        }
     }
 }
 
@@ -323,7 +322,7 @@ mod tests {
 
     #[test]
     fn test_frechet_leq_discret_frechet() {
-        use crate::distance::discret_frechet::discret_frechet_euclidean;
+        use crate::distance::discrete_frechet::discret_frechet_euclidean;
 
         let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 2.0], [3.0, 1.0]];
         let traj2: Vec<[f64; 2]> = vec![[0.5, 0.5], [2.0, 1.5], [3.5, 2.5]];

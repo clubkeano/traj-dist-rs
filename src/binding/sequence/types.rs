@@ -25,12 +25,17 @@ impl<'a> PointRef<'a> {
 impl<'a> AsCoord for PointRef<'a> {
     #[inline(always)]
     fn x(&self) -> f64 {
-        self.data[self.idx * 2]
+        self.data[self.idx * 3]
     }
 
     #[inline(always)]
     fn y(&self) -> f64 {
-        self.data[self.idx * 2 + 1]
+        self.data[self.idx * 3 + 1]
+    }
+
+    #[inline(always)]
+    fn z(&self) -> f64 {
+        self.data[self.idx * 3 + 2]
     }
 }
 
@@ -40,7 +45,7 @@ pub enum PyTrajectoryType<'a> {
     Numpy(TrajectoryRef<'a>),
 
     /// Data copied from Python List
-    Owned(Vec<[f64; 2]>),
+    Owned(Vec<[f64; 3]>),
 }
 
 impl<'a> TryFrom<&Bound<'a, PyAny>> for PyTrajectoryType<'a> {
@@ -55,9 +60,9 @@ impl<'a> TryFrom<&Bound<'a, PyAny>> for PyTrajectoryType<'a> {
         }
         // Otherwise try to convert to Python List
         else if let Ok(loc_list) = seq.downcast::<PyList>() {
-            let owned_vec = loc_list.extract::<Vec<[f64; 2]>>()
+            let owned_vec = loc_list.extract::<Vec<[f64; 3]>>()
                 .map_err(|_| TrajDistError::DataConvertionError(
-                    "Failed to extract List[List[float]] into Vec<[f64; 2]>. Check list structure and element types.".to_string()
+                    "Failed to extract List[List[float]] into Vec<[f64; 3]>. Check list structure and element types.".to_string()
                 ))?;
             Ok(Self::Owned(owned_vec))
         } else {
@@ -86,7 +91,7 @@ impl<'a> CoordSequence for PyTrajectoryType<'a> {
             PyTrajectoryType::Owned(vec) => {
                 // Get slice reference directly from Vec
                 let data = unsafe {
-                    std::slice::from_raw_parts(vec.as_ptr() as *const f64, vec.len() * 2)
+                    std::slice::from_raw_parts(vec.as_ptr() as *const f64, vec.len() * 3)
                 };
                 PointRef::new(data, idx)
             }

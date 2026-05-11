@@ -24,9 +24,9 @@ use crate::{
 #[derive(Debug, Clone, Copy, PartialEq, strum_macros::EnumString, strum_macros::Display)]
 #[strum(serialize_all = "snake_case")]
 pub enum DistanceType {
-    /// Euclidean distance (2D Cartesian space)
+    /// Euclidean distance (3D Cartesian space)
     ///
-    /// Uses standard Euclidean distance formula: √[(x₂-x₁)² + (y₂-y₁)²]
+    /// Uses standard Euclidean distance formula: √[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]
     /// Suitable for coordinates in a Cartesian plane.
     Euclidean,
     /// Spherical distance (Great circle distance on Earth)

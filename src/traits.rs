@@ -40,9 +40,10 @@ pub use crate::distance::base::DistanceCalculator;
 /// ```rust
 /// use traj_dist_rs::traits::AsCoord;
 ///
-/// let point = [1.0, 2.0];
+/// let point = [1.0, 2.0, 3.0];
 /// assert_eq!(point.x(), 1.0);
 /// assert_eq!(point.y(), 2.0);
+/// assert_eq!(point.z(), 3.0);
 /// ```
 pub trait AsCoord {
     /// Get the x-coordinate (longitude or easting)
@@ -54,6 +55,11 @@ pub trait AsCoord {
     ///
     /// Returns the y-coordinate value of the point.
     fn y(&self) -> f64;
+
+    /// Get the z-coordinate (latitude or northing)
+    ///
+    /// Returns the y-coordinate value of the point.
+    fn z(&self) -> f64;
 }
 
 /// Trait for coordinate sequence representation
@@ -67,10 +73,11 @@ pub trait AsCoord {
 /// ```rust
 /// use traj_dist_rs::traits::{CoordSequence, AsCoord};
 ///
-/// let trajectory = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+/// let trajectory = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0], [2.0, 2.0, 2.0]];
 /// assert_eq!(trajectory.len(), 3);
 /// assert_eq!(trajectory.get(1).x(), 1.0);
 /// assert_eq!(trajectory.get(1).y(), 1.0);
+/// assert_eq!(trajectory.get(1).z(), 1.0);
 /// ```
 pub trait CoordSequence {
     /// The type of coordinate in this sequence
@@ -99,27 +106,35 @@ pub trait CoordSequence {
     fn get(&self, i: usize) -> Self::Coord;
 }
 
-/// Implementation of `AsCoord` for 2-element array of f64
+/// Implementation of `AsCoord` for 3-element array of f64
 ///
-/// This implementation allows `[f64; 2]` arrays to be used as coordinates.
+/// This implementation allows `[f64; 3]` arrays to be used as coordinates.
 /// The first element is treated as x-coordinate and the second as y-coordinate.
-impl AsCoord for [f64; 2] {
+impl AsCoord for [f64; 3] {
     fn x(&self) -> f64 {
         self[0]
     }
 
     fn y(&self) -> f64 {
         self[1]
+    }
+
+    fn z(&self) -> f64 {
+        self[2]
     }
 }
 
-impl AsCoord for &[f64; 2] {
+impl AsCoord for &[f64; 3] {
     fn x(&self) -> f64 {
         self[0]
     }
 
     fn y(&self) -> f64 {
         self[1]
+    }
+
+    fn z(&self) -> f64 {
+        self[2]
     }
 }
 
@@ -127,8 +142,8 @@ impl AsCoord for &[f64; 2] {
 ///
 /// This implementation allows `Vec<[f64; 2]>` to be used as a sequence of coordinates,
 /// which is a common representation for trajectories.
-impl CoordSequence for Vec<[f64; 2]> {
-    type Coord = [f64; 2];
+impl CoordSequence for Vec<[f64; 3]> {
+    type Coord = [f64; 3];
 
     fn len(&self) -> usize {
         self.as_slice().len()

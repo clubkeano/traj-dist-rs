@@ -22,8 +22,8 @@
 //! use traj_dist_rs::distance::distance_type::DistanceType;
 //! use traj_dist_rs::distance::dtw::dtw;
 //!
-//! let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-//! let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+//! let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+//! let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 //!
 //! let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 //! let result = dtw(&calculator, false);

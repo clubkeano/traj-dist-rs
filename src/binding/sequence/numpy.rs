@@ -22,9 +22,9 @@ unsafe impl<'a> Sync for TrajectoryRef<'a> {}
 impl<'a> TrajectoryRef<'a> {
     pub fn new(array: PyReadonlyArray2<'a, f64>) -> Result<Self, TrajDistError> {
         let shape = array.shape();
-        if shape.len() != 2 || shape[1] != 2 {
+        if shape.len() != 2 || shape[1] != 3 {
             return Err(TrajDistError::DataConvertionError(format!(
-                "Numpy array must have a shape of (N, 2), but got {:?}",
+                "Numpy array must have a shape of (N, 3), but got {:?}",
                 shape
             )));
         }
@@ -46,7 +46,7 @@ impl<'a> TrajectoryRef<'a> {
     /// Get underlying data slice (created using pointer)
     #[inline(always)]
     fn get_data(&self) -> &'a [f64] {
-        unsafe { std::slice::from_raw_parts(self.data_ptr, self.len * 2) }
+        unsafe { std::slice::from_raw_parts(self.data_ptr, self.len * 3) }
     }
 }
 

@@ -208,7 +208,7 @@ pub enum DistanceAlgorithm {
     /// Edit Distance on Real sequence with epsilon threshold
     EDR { eps: f64 },
     /// Edit distance with Real Penalty and gap point
-    ERP { g: [f64; 2] },
+    ERP { g: [f64; 3] },
     /// Discrete Frechet Distance (no parameters)
     DiscretFrechet,
     /// Edit Distance with Projections (no parameters, Euclidean only)
@@ -379,9 +379,9 @@ impl Metric {
 /// use traj_dist_rs::distance::batch::{pdist, Metric, DistanceAlgorithm, DistanceType};
 ///
 /// let trajectories = vec![
-///     vec![[0.0, 0.0], [1.0, 1.0]],
-///     vec![[0.0, 1.0], [1.0, 0.0]],
-///     vec![[0.5, 0.5], [1.5, 1.5]],
+///     vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]],
+///     vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]],
+///     vec![[0.5, 0.5, 0.5], [1.5, 1.5, 1.5]],
 /// ];
 ///
 /// let metric = Metric::new(
@@ -561,11 +561,11 @@ fn compute_pdist_parallel<T: CoordSequence + Sync>(
 /// use traj_dist_rs::distance::batch::{cdist, Metric, DistanceAlgorithm, DistanceType};
 ///
 /// let trajectories_a = vec![
-///     vec![[0.0, 0.0], [1.0, 1.0]],
-///     vec![[0.0, 1.0], [1.0, 0.0]],
+///     vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]],
+///     vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]],
 /// ];
 /// let trajectories_b = vec![
-///     vec![[0.5, 0.5], [1.5, 1.5]],
+///     vec![[0.5, 0.5, 0.5], [1.5, 1.5, 1.5]],
 /// ];
 ///
 /// let metric = Metric::new(
