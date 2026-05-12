@@ -95,7 +95,7 @@ features = ["python-binding", "parallel", "progress", "pyo3/extension-module"]
 build-frontend = "build[uv]"
 skip = "pp* cp314* *musllinux*"
 test-extras = ["test"]
-test-command = "pytest {project}/py_tests -v --ignore={project}/py_tests/test_batch_performance.py --ignore={project}/py_tests/test_debug_metainfo.py"
+test-command = "pytest {project}/py_tests/test_ci.py -v"
 
 [tool.cibuildwheel.linux]
 # Build for x86_64 and aarch64 with both glibc and musl
