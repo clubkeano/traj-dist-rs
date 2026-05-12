@@ -12,8 +12,8 @@ import traj_dist_rs
 
 def test_sspd_basic():
     """Test SSPD basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
     dist = traj_dist_rs.sspd(traj1, traj2, "euclidean")
 
@@ -25,8 +25,8 @@ def test_sspd_basic():
 
 def test_sspd_spherical():
     """Test SSPD spherical distance"""
-    traj1 = [[-122.4, 37.7], [-122.3, 37.8]]
-    traj2 = [[-122.4, 37.8], [-122.3, 37.7]]
+    traj1 = [[-122.4, 37.7, 0.0], [-122.3, 37.8, 0.0]]
+    traj2 = [[-122.4, 37.8, 0.0], [-122.3, 37.7, 0.0]]
 
     dist = traj_dist_rs.sspd(traj1, traj2, "spherical")
 
@@ -37,8 +37,8 @@ def test_sspd_spherical():
 
 def test_dtw_basic():
     """Test DTW basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
     result = traj_dist_rs.dtw(traj1, traj2, "euclidean", use_full_matrix=False)
 
@@ -53,8 +53,8 @@ def test_dtw_basic():
 
 def test_dtw_with_matrix():
     """Test DTW return matrix"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     result = traj_dist_rs.dtw(traj1, traj2, "euclidean", use_full_matrix=True)
 
@@ -67,8 +67,8 @@ def test_dtw_with_matrix():
 
 def test_hausdorff_basic():
     """Test Hausdorff basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     dist = traj_dist_rs.hausdorff(traj1, traj2, "euclidean")
 
@@ -79,8 +79,8 @@ def test_hausdorff_basic():
 
 def test_lcss_basic():
     """Test LCSS basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
     result = traj_dist_rs.lcss(
         traj1, traj2, "euclidean", eps=0.5, use_full_matrix=False
@@ -94,8 +94,8 @@ def test_lcss_basic():
 
 def test_edr_basic():
     """Test EDR basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     result = traj_dist_rs.edr(traj1, traj2, "euclidean", eps=0.5, use_full_matrix=False)
 
@@ -107,11 +107,11 @@ def test_edr_basic():
 
 def test_erp_standard_basic():
     """Test ERP standard basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     result = traj_dist_rs.erp_standard(
-        traj1, traj2, "euclidean", g=[0.0, 0.0], use_full_matrix=False
+        traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=False
     )
 
     assert hasattr(result, "distance")
@@ -122,11 +122,11 @@ def test_erp_standard_basic():
 
 def test_erp_compat_basic():
     """Test ERP compat_traj_dist basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     result = traj_dist_rs.erp_compat_traj_dist(
-        traj1, traj2, "euclidean", g=[0.0, 0.0], use_full_matrix=False
+        traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=False
     )
 
     assert hasattr(result, "distance")
@@ -137,8 +137,8 @@ def test_erp_compat_basic():
 
 def test_discret_frechet_basic():
     """Test Discret Frechet basic functionality"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     result = traj_dist_rs.discret_frechet(
         traj1, traj2, "euclidean", use_full_matrix=False
@@ -152,7 +152,7 @@ def test_discret_frechet_basic():
 
 def test_same_trajectory_zero_distance():
     """Test that distance for identical trajectories should be close to 0"""
-    traj = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
+    traj = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
 
     # SSPD
     dist = traj_dist_rs.sspd(traj, traj, "euclidean")
@@ -165,8 +165,8 @@ def test_same_trajectory_zero_distance():
 
 def test_numpy_array_input():
     """Test numpy array input"""
-    traj1 = np.array([[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]])
-    traj2 = np.array([[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]])
+    traj1 = np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]])
+    traj2 = np.array([[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]])
 
     dist = traj_dist_rs.sspd(traj1, traj2, "euclidean")
 
@@ -178,8 +178,8 @@ def test_numpy_array_input():
 def test_empty_trajectory_handling():
     """Test empty trajectory handling"""
     # Single point trajectory (SSPD should return inf)
-    traj1 = [[0.0, 0.0]]
-    traj2 = [[0.0, 1.0]]
+    traj1 = [[0.0, 0.0, 0.0]]
+    traj2 = [[0.0, 1.0, 0.0]]
 
     dist = traj_dist_rs.sspd(traj1, traj2, "euclidean")
     assert dist == float("inf")
@@ -187,8 +187,8 @@ def test_empty_trajectory_handling():
 
 def test_invalid_distance_type():
     """Test invalid distance type"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
     # Should raise exception or return error
     with pytest.raises(Exception):
@@ -197,8 +197,8 @@ def test_invalid_distance_type():
 
 def test_readme_examples():
     """Test example code from README"""
-    traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-    traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+    traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+    traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
     # SSPD
     distance = traj_dist_rs.sspd(traj1, traj2, dist_type="euclidean")
