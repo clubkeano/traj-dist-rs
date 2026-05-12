@@ -29,8 +29,8 @@ use common::{assert_valid_distance, assert_valid_dp_result};
 /// Test empty trajectories
 #[test]
 fn test_empty_trajectories() {
-    let empty: Vec<[f64; 2]> = vec![];
-    let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let empty: Vec<[f64; 3]> = vec![];
+    let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // SSPD should return f64::MAX for empty trajectories
     let dist = sspd(&empty, &traj, DistanceType::Euclidean);
@@ -87,19 +87,19 @@ fn test_empty_trajectories() {
 
     // ERP should return appropriate value for empty trajectories
     let calculator = TrajectoryCalculator::new(&empty, &traj, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert!(result.distance.is_finite());
 
     let calculator = TrajectoryCalculator::new(&traj, &empty, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert!(result.distance.is_finite());
 }
 
 /// Test single point trajectories
 #[test]
 fn test_single_point_trajectories() {
-    let p1: Vec<[f64; 2]> = vec![[0.0, 0.0]];
-    let p2: Vec<[f64; 2]> = vec![[1.0, 1.0]];
+    let p1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
+    let p2: Vec<[f64; 3]> = vec![[1.0, 1.0, 0.0]];
 
     // SSPD single point may return f64::MAX for Euclidean distance (needs at least 2 points in target)
     let dist = sspd(&p1, &p2, DistanceType::Euclidean);
@@ -140,14 +140,14 @@ fn test_single_point_trajectories() {
 
     // ERP single point should work
     let calculator = TrajectoryCalculator::new(&p1, &p2, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert_valid_dp_result(&result);
 }
 
 /// Test identical trajectories
 #[test]
 fn test_identical_trajectories() {
-    let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+    let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
     // SSPD identical should be 0
     let dist = sspd(&traj, &traj, DistanceType::Euclidean);
@@ -179,14 +179,14 @@ fn test_identical_trajectories() {
 
     // ERP identical should give distance of 0
     let calculator = TrajectoryCalculator::new(&traj, &traj, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert_identical_distance(result.distance);
 }
 
 /// Test identical trajectories with spherical distance
 #[test]
 fn test_identical_trajectories_spherical() {
-    let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+    let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
     // SSPD identical should be 0
     let dist = sspd(&traj, &traj, DistanceType::Spherical);
@@ -213,15 +213,15 @@ fn test_identical_trajectories_spherical() {
 
     // ERP identical should give distance of 0
     let calculator = TrajectoryCalculator::new(&traj, &traj, DistanceType::Spherical);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert_identical_distance(result.distance);
 }
 
 /// Test very different trajectories
 #[test]
 fn test_very_different_trajectories() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[10.0, 10.0], [11.0, 11.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[10.0, 10.0, 0.0], [11.0, 11.0, 0.0]];
 
     // SSPD should give large distance
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -240,8 +240,8 @@ fn test_very_different_trajectories() {
 /// Test trajectories of different lengths
 #[test]
 fn test_different_length_trajectories() {
-    let short: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let long: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]];
+    let short: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let long: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0], [3.0, 3.0, 0.0]];
 
     // SSPD should handle different lengths
     let dist = sspd(&short, &long, DistanceType::Euclidean);
@@ -273,15 +273,15 @@ fn test_different_length_trajectories() {
 
     // ERP should handle different lengths
     let calculator = TrajectoryCalculator::new(&short, &long, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     assert_valid_dp_result(&result);
 }
 
 /// Test with zero coordinates
 #[test]
 fn test_zero_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [0.0, 0.0]];
-    let traj2: Vec<[f64; 2]> = vec![[1.0, 1.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[1.0, 1.0, 0.0], [1.0, 1.0, 0.0]];
 
     // SSPD should handle zero coordinates
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -300,8 +300,8 @@ fn test_zero_coordinates() {
 /// Test with negative coordinates
 #[test]
 fn test_negative_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[-1.0, -1.0], [-2.0, -2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[-3.0, -3.0], [-4.0, -4.0]];
+    let traj1: Vec<[f64; 3]> = vec![[-1.0, -1.0, 0.0], [-2.0, -2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[-3.0, -3.0, 0.0], [-4.0, -4.0, 0.0]];
 
     // SSPD should handle negative coordinates
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -320,8 +320,8 @@ fn test_negative_coordinates() {
 /// Test with very large coordinates
 #[test]
 fn test_large_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[1e6, 1e6], [1e6 + 1.0, 1e6 + 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[1e6 + 10.0, 1e6 + 10.0], [1e6 + 11.0, 1e6 + 11.0]];
+    let traj1: Vec<[f64; 3]> = vec![[1e6, 1e6, 0.0], [1e6 + 1.0, 1e6 + 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[1e6 + 10.0, 1e6 + 10.0, 0.0], [1e6 + 11.0, 1e6 + 11.0, 0.0]];
 
     // SSPD should handle large coordinates
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -340,8 +340,8 @@ fn test_large_coordinates() {
 /// Test with very small coordinates
 #[test]
 fn test_small_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[1e-6, 1e-6], [2e-6, 2e-6]];
-    let traj2: Vec<[f64; 2]> = vec![[3e-6, 3e-6], [4e-6, 4e-6]];
+    let traj1: Vec<[f64; 3]> = vec![[1e-6, 1e-6, 0.0], [2e-6, 2e-6, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[3e-6, 3e-6, 0.0], [4e-6, 4e-6, 0.0]];
 
     // SSPD should handle small coordinates
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -360,8 +360,8 @@ fn test_small_coordinates() {
 /// Test EDwP empty trajectories
 #[test]
 fn test_edwp_empty_trajectories() {
-    let empty: Vec<[f64; 2]> = vec![];
-    let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let empty: Vec<[f64; 3]> = vec![];
+    let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // EDwP should return f64::MAX for empty trajectories
     let result = traj_dist_rs::distance::edwp::edwp(&empty, &traj, false);
@@ -377,8 +377,8 @@ fn test_edwp_empty_trajectories() {
 /// Test EDwP single point trajectories
 #[test]
 fn test_edwp_single_point() {
-    let p1: Vec<[f64; 2]> = vec![[0.0, 0.0]];
-    let p2: Vec<[f64; 2]> = vec![[1.0, 1.0]];
+    let p1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
+    let p2: Vec<[f64; 3]> = vec![[1.0, 1.0, 0.0]];
 
     // EDwP single point should work and return finite distance
     let result = traj_dist_rs::distance::edwp::edwp(&p1, &p2, false);
@@ -390,7 +390,7 @@ fn test_edwp_single_point() {
 /// Test EDwP identical trajectories
 #[test]
 fn test_edwp_identical() {
-    let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+    let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
     // EDwP identical should be 0
     let result = traj_dist_rs::distance::edwp::edwp(&traj, &traj, false);
