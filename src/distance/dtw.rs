@@ -48,8 +48,8 @@ use crate::distance::base::DistanceCalculator;
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 ///
@@ -84,7 +84,7 @@ pub fn dtw<D: DistanceCalculator>(
             for j in 1..=n1 {
                 let dist = calculator.dis_between(i - 1, j - 1);
 
-                let min_prev = c[(i - 1) * (n1 + 1) + (j - 1)]
+                let min_prev = (c[(i - 1) * (n1 + 1) + (j - 1)] + dist) // symmetric2: diagonal counts dist twice
                     .min(c[(i - 1) * (n1 + 1) + j])
                     .min(c[i * (n1 + 1) + (j - 1)]);
 
@@ -103,8 +103,9 @@ pub fn dtw<D: DistanceCalculator>(
             curr_row[0] = f64::INFINITY;
             for j in 1..=n1 {
                 let dist = calculator.dis_between(i - 1, j - 1);
-
-                let min_prev = prev_row[j - 1].min(prev_row[j]).min(curr_row[j - 1]);
+                
+                //let min_prev = prev_row[j - 1].min(prev_row[j]).min(curr_row[j - 1]); //symmetric1
+                let min_prev = (prev_row[j - 1] + dist).min(prev_row[j]).min(curr_row[j - 1]); //symmetric2
                 curr_row[j] = dist + min_prev;
             }
             // Swap rows for next iteration
@@ -123,8 +124,8 @@ mod tests {
 
     #[test]
     fn test_dtw_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = dtw(&calculator, false);
@@ -135,8 +136,8 @@ mod tests {
 
     #[test]
     fn test_dtw_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = dtw(&calculator, false);
@@ -149,8 +150,8 @@ mod tests {
 
     #[test]
     fn test_dtw_spherical_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
         let result = dtw(&calculator, false);
@@ -160,8 +161,8 @@ mod tests {
 
     #[test]
     fn test_dtw_with_both_distance_types() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let euclidean_calc = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let spherical_calc = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -175,8 +176,8 @@ mod tests {
 
     #[test]
     fn test_dtw_consistency_between_modes() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0], [2.0, 2.0, 2.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 2.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result_optimized = dtw(&calculator, false);
@@ -209,8 +210,8 @@ mod tests {
 
     #[test]
     fn test_dtw_matrix_content() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = dtw(&calculator, true);
@@ -231,9 +232,9 @@ mod tests {
 
     #[test]
     fn test_dtw_with_precomputed_distances() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
 
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         // Precompute distance matrix using utility function
 
