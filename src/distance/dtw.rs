@@ -84,7 +84,7 @@ pub fn dtw<D: DistanceCalculator>(
             for j in 1..=n1 {
                 let dist = calculator.dis_between(i - 1, j - 1);
 
-                let min_prev = (c[(i - 1) * (n1 + 1) + (j - 1)] + dist) // symmetric2: diagonal counts dist twice
+                let min_prev = (c[(i - 1) * (n1 + 1) + (j - 1)])
                     .min(c[(i - 1) * (n1 + 1) + j])
                     .min(c[i * (n1 + 1) + (j - 1)]);
 
@@ -104,8 +104,7 @@ pub fn dtw<D: DistanceCalculator>(
             for j in 1..=n1 {
                 let dist = calculator.dis_between(i - 1, j - 1);
                 
-                //let min_prev = prev_row[j - 1].min(prev_row[j]).min(curr_row[j - 1]); //symmetric1
-                let min_prev = (prev_row[j - 1] + dist).min(prev_row[j]).min(curr_row[j - 1]); //symmetric2
+                let min_prev = prev_row[j - 1].min(prev_row[j]).min(curr_row[j - 1]);
                 curr_row[j] = dist + min_prev;
             }
             // Swap rows for next iteration
