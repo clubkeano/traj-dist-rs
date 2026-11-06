@@ -32,8 +32,8 @@ use common::assert_valid_dp_result;
 /// Test DTW with matrix return
 #[test]
 fn test_dtw_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 
@@ -57,8 +57,8 @@ fn test_dtw_with_matrix() {
 /// Test DTW matrix content
 #[test]
 fn test_dtw_matrix_content() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = dtw(&calculator, true);
@@ -87,8 +87,18 @@ fn test_dtw_matrix_content() {
 /// Test DTW with larger trajectories
 #[test]
 fn test_dtw_with_matrix_larger() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0], [3.0, 2.0]];
+    let traj1: Vec<[f64; 3]> = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+    ];
+    let traj2: Vec<[f64; 3]> = vec![
+        [0.0, 1.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [2.0, 3.0, 0.0],
+        [3.0, 2.0, 0.0],
+    ];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 
@@ -103,8 +113,8 @@ fn test_dtw_with_matrix_larger() {
 /// Test Discret Frechet with matrix return
 #[test]
 fn test_discret_frechet_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 
@@ -128,8 +138,8 @@ fn test_discret_frechet_with_matrix() {
 /// Test Discret Frechet matrix content
 #[test]
 fn test_discret_frechet_matrix_content() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = discret_frechet(&calculator, true);
@@ -158,8 +168,8 @@ fn test_discret_frechet_matrix_content() {
 /// Test LCSS with matrix return
 #[test]
 fn test_lcss_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let eps = 0.1;
 
@@ -185,8 +195,8 @@ fn test_lcss_with_matrix() {
 /// Test EDR with matrix return
 #[test]
 fn test_edr_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let eps = 0.1;
 
@@ -212,10 +222,10 @@ fn test_edr_with_matrix() {
 /// Test ERP with matrix return
 #[test]
 fn test_erp_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
-    let g = [0.0, 0.0];
+    let g = [0.0, 0.0, 0.0];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 
@@ -239,8 +249,8 @@ fn test_erp_with_matrix() {
 /// Test DTW with precomputed distance matrix
 #[test]
 fn test_dtw_with_precomputed_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // Precompute distance matrix
     let distance_matrix = precompute_distance_matrix(&traj1, &traj2, DistanceType::Euclidean);
@@ -264,8 +274,8 @@ fn test_dtw_with_precomputed_matrix() {
 /// Test DTW consistency between TrajectoryCalculator and PrecomputedDistanceCalculator
 #[test]
 fn test_dtw_consistency_between_calculators() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // Using TrajectoryCalculator
     let traj_calc = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -311,8 +321,8 @@ fn test_dtw_consistency_between_calculators() {
 /// Test Discret Frechet consistency between TrajectoryCalculator and PrecomputedDistanceCalculator
 #[test]
 fn test_discret_frechet_consistency_between_calculators() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // Using TrajectoryCalculator
     let traj_calc = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -358,8 +368,8 @@ fn test_discret_frechet_consistency_between_calculators() {
 /// Test matrix row-major order
 #[test]
 fn test_matrix_row_major_order() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = dtw(&calculator, true);
@@ -392,8 +402,8 @@ fn test_matrix_row_major_order() {
 /// Test matrix all elements are finite (for valid inputs)
 #[test]
 fn test_matrix_all_finite() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = dtw(&calculator, true);
@@ -415,8 +425,8 @@ fn test_matrix_all_finite() {
 /// Test spherical distance with matrix
 #[test]
 fn test_spherical_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     // DTW with spherical
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Spherical);
@@ -436,7 +446,7 @@ fn test_spherical_with_matrix() {
     assert_valid_dp_result(&result);
 
     // ERP with spherical
-    let result = erp_standard(&calculator, &[0.0, 0.0], true);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], true);
     assert!(result.matrix.is_some());
     assert_valid_dp_result(&result);
 }
@@ -444,8 +454,8 @@ fn test_spherical_with_matrix() {
 /// Test EDwP with matrix return
 #[test]
 fn test_edwp_with_matrix() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // Without matrix
     let result_no_matrix = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, false);
@@ -469,8 +479,8 @@ fn test_edwp_with_matrix() {
 /// Test EDwP matrix content validity
 #[test]
 fn test_edwp_matrix_content() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let result = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, true);
     assert_valid_dp_result(&result);

@@ -241,7 +241,12 @@ fn test_very_different_trajectories() {
 #[test]
 fn test_different_length_trajectories() {
     let short: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
-    let long: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0], [3.0, 3.0, 0.0]];
+    let long: Vec<[f64; 3]> = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+    ];
 
     // SSPD should handle different lengths
     let dist = sspd(&short, &long, DistanceType::Euclidean);

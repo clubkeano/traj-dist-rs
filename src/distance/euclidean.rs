@@ -22,9 +22,9 @@
 //! use traj_dist_rs::distance::euclidean::euclidean_distance;
 //!
 //! let p1 = [0.0, 0.0, 0.0];
-//! let p2 = [3.0, 4.0, 5.0];
+//! let p2 = [2.0, 3.0, 6.0];
 //! let dist = euclidean_distance(&p1, &p2);
-//! assert_eq!(dist, 5.0);
+//! assert_eq!(dist, 7.0);
 //! ```
 
 use crate::traits::{AsCoord, CoordSequence};
@@ -257,8 +257,7 @@ pub fn point_to_segment_distance<C: AsCoord, D: AsCoord, E: AsCoord>(
     let dz = s2z - s1z;
     let seg_len_sq = dx * dx + dy * dy + dz * dz;
 
-    let u = ((point.x() - s1x) * dx + (point.y() - s1y) * dy + (point.z() - s1z) * dz)
-        / seg_len_sq;
+    let u = ((point.x() - s1x) * dx + (point.y() - s1y) * dy + (point.z() - s1z) * dz) / seg_len_sq;
 
     if !(0.00001..=1.0).contains(&u) {
         // Closest point does not fall within the segment

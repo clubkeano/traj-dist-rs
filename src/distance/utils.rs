@@ -38,8 +38,8 @@ use crate::traits::{AsCoord, CoordSequence};
 /// use traj_dist_rs::distance::utils::precompute_distance_matrix;
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 ///
 /// let matrix = precompute_distance_matrix(&traj1, &traj2, DistanceType::Euclidean);
 /// println!("Distance between traj1[0] and traj2[0]: {}", matrix[0]);
@@ -85,7 +85,7 @@ where
     distance_matrix
 }
 
-/// Extract coordinates from a trajectory into a vector of [f64; 2]
+/// Extract coordinates from a trajectory into a vector of [f64; 3]
 ///
 /// This helper function is used to convert a trajectory into a format
 /// that can be used with PrecomputedDistanceCalculator.
@@ -100,15 +100,15 @@ where
 ///
 /// # Returns
 ///
-/// Returns a vector of coordinates as [f64; 2] arrays.
-pub fn extract_coords<T: CoordSequence>(t: &T) -> Vec<[f64; 2]>
+/// Returns a vector of coordinates as [f64; 3] arrays.
+pub fn extract_coords<T: CoordSequence>(t: &T) -> Vec<[f64; 3]>
 where
     T::Coord: AsCoord,
 {
     let mut coords = Vec::with_capacity(t.len());
     for i in 0..t.len() {
         let coord = t.get(i);
-        coords.push([coord.x(), coord.y()]);
+        coords.push([coord.x(), coord.y(), coord.z()]);
     }
     coords
 }
@@ -119,8 +119,8 @@ mod tests {
 
     #[test]
     fn test_precompute_euclidean() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let matrix = precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);
         let n1 = t1.len();
@@ -130,9 +130,9 @@ mod tests {
 
         // Check some values using row-major indexing
         // Distance between [0,0] and [0,1] should be 1.0
-        assert!((matrix[0 * n1 + 0] - 1.0).abs() < 1e-10);
+        assert!((matrix[0] - 1.0).abs() < 1e-10);
         // Distance between [0,0] and [1,0] should be 1.0
-        assert!((matrix[0 * n1 + 1] - 1.0).abs() < 1e-10);
+        assert!((matrix[1] - 1.0).abs() < 1e-10);
         // Distance between [1,1] and [0,1] should be 1.0
         assert!((matrix[1 * n1 + 0] - 1.0).abs() < 1e-10);
         // Distance between [1,1] and [1,0] should be 1.0
@@ -141,8 +141,8 @@ mod tests {
 
     #[test]
     fn test_precompute_spherical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let matrix = precompute_distance_matrix(&t0, &t1, DistanceType::Spherical);
         let n1 = t1.len();
@@ -151,16 +151,16 @@ mod tests {
         assert_eq!(matrix.len(), 4);
 
         // All distances should be positive
-        assert!(matrix[0 * n1 + 0] > 0.0);
-        assert!(matrix[0 * n1 + 1] > 0.0);
+        assert!(matrix[0] > 0.0);
+        assert!(matrix[1] > 0.0);
         assert!(matrix[1 * n1 + 0] > 0.0);
         assert!(matrix[1 * n1 + 1] > 0.0);
     }
 
     #[test]
     fn test_precompute_empty() {
-        let t0: Vec<[f64; 2]> = vec![];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
 
         let matrix = precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);
 
@@ -169,15 +169,15 @@ mod tests {
 
     #[test]
     fn test_precompute_consistency() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let matrix = precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);
         let n1 = t1.len();
 
         // Verify that matrix values match direct distance calculations
-        assert!((matrix[0 * n1 + 0] - euclidean_distance(&t0[0], &t1[0])).abs() < 1e-10);
-        assert!((matrix[0 * n1 + 1] - euclidean_distance(&t0[0], &t1[1])).abs() < 1e-10);
+        assert!((matrix[0] - euclidean_distance(&t0[0], &t1[0])).abs() < 1e-10);
+        assert!((matrix[1] - euclidean_distance(&t0[0], &t1[1])).abs() < 1e-10);
         assert!((matrix[1 * n1 + 0] - euclidean_distance(&t0[1], &t1[0])).abs() < 1e-10);
         assert!((matrix[1 * n1 + 1] - euclidean_distance(&t0[1], &t1[1])).abs() < 1e-10);
     }

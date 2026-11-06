@@ -53,8 +53,8 @@ use crate::distance::base::DistanceCalculator;
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 0.1], [1.0, 1.1]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 /// let result = edr(&calculator, 0.5, false);
@@ -142,8 +142,8 @@ mod tests {
 
     #[test]
     fn test_edr_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
         let eps = 0.5;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -154,8 +154,8 @@ mod tests {
 
     #[test]
     fn test_edr_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
         let eps = 1e-6;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -169,8 +169,8 @@ mod tests {
 
     #[test]
     fn test_edr_euclidean_eps_effect() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
         let calc_small = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_large = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -186,8 +186,8 @@ mod tests {
 
     #[test]
     fn test_edr_euclidean_empty() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![];
         let eps = 1.0;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -201,8 +201,8 @@ mod tests {
 
     #[test]
     fn test_edr_spherical_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
         let eps = 100.0;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -213,8 +213,8 @@ mod tests {
 
     #[test]
     fn test_edr_spherical_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
         let eps = 1e-6;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -228,8 +228,8 @@ mod tests {
 
     #[test]
     fn test_edr_spherical_eps_effect() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
         let calc_small = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
         let calc_large = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -245,8 +245,8 @@ mod tests {
 
     #[test]
     fn test_edr_with_both_distance_types() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
         let eps = 100.0;
 
         let euclidean_calc = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -261,8 +261,8 @@ mod tests {
 
     #[test]
     fn test_edr_consistency_between_modes() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
         let eps = 1.0;
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -281,8 +281,8 @@ mod tests {
 
     #[test]
     fn test_edr_with_precomputed_distances() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let distance_matrix =
             crate::distance::utils::precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);

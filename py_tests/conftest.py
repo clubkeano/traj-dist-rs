@@ -319,7 +319,7 @@ def edr_spherical(all_metainfo, data_dir):
 
 @pytest.fixture(scope="session")
 def erp_euclidean(all_metainfo, data_dir):
-    """ERP Euclidean distance test data (g=[-122.41443,37.77646])"""
+    """ERP Euclidean distance test data (g=[-122.41443, 37.77646, 0.0])"""
 
     erp_metainfo = all_metainfo.get("erp", [])
     euclidean_metainfo = [m for m in erp_metainfo if m["type_d"] == "euclidean"]
@@ -339,7 +339,7 @@ def erp_euclidean(all_metainfo, data_dir):
 
 @pytest.fixture(scope="session")
 def erp_spherical(all_metainfo, data_dir):
-    """ERP Spherical distance test data (g=[-122.41443,37.77646])"""
+    """ERP Spherical distance test data (g=[-122.41443, 37.77646, 0.0])"""
 
     erp_metainfo = all_metainfo.get("erp", [])
     spherical_metainfo = [m for m in erp_metainfo if m["type_d"] == "spherical"]

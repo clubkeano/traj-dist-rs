@@ -27,8 +27,8 @@ use pyo3_stub_gen::{define_stub_info_gatherer, derive::gen_stub_pyfunction};
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-/// t2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+/// t2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 ///
 /// # Without matrix
 /// result = traj_dist_rs.edwp(t1, t2, False)

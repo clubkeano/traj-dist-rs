@@ -34,7 +34,7 @@ class Metainfo(BaseModel):
     # Optional hyperparameters
     eps: Optional[float] = Field(None, description="eps parameter for LCSS and EDR")
     g: Optional[List[float]] = Field(
-        None, description="g parameter for ERP (a list of two floats)"
+        None, description="g parameter for ERP (a list of three floats; 2D fixtures are padded with z=0)"
     )
     precision: Optional[int] = Field(None, description="precision parameter for SOWD")
     converted: Optional[bool] = Field(None, description="converted parameter for SOWD")

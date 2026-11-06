@@ -47,8 +47,8 @@ use crate::distance::base::DistanceCalculator;
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 0.1], [1.0, 1.1]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 /// let result = lcss(&calculator, 0.5, false);
@@ -124,8 +124,8 @@ mod tests {
 
     #[test]
     fn test_lcss_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let dist = lcss(&calculator, 0.5, false);
@@ -135,8 +135,8 @@ mod tests {
 
     #[test]
     fn test_lcss_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = lcss(&calculator, 1e-6, false);
@@ -149,8 +149,8 @@ mod tests {
 
     #[test]
     fn test_lcss_euclidean_eps() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let calc_small = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_large = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -166,8 +166,8 @@ mod tests {
 
     #[test]
     fn test_lcss_spherical_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
         let result = lcss(&calculator, 100000.0, false);
@@ -177,8 +177,8 @@ mod tests {
 
     #[test]
     fn test_lcss_spherical_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
         let result = lcss(&calculator, 1e-6, false);
@@ -191,8 +191,8 @@ mod tests {
 
     #[test]
     fn test_lcss_empty_trajectory() {
-        let t0: Vec<[f64; 2]> = vec![];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let calc_euclid = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = lcss(&calc_euclid, 1.0, false);
@@ -205,8 +205,8 @@ mod tests {
 
     #[test]
     fn test_lcss_with_both_distance_types() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let euclidean_calc = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let spherical_calc = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -220,8 +220,8 @@ mod tests {
 
     #[test]
     fn test_lcss_consistency_between_modes() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result_optimized = lcss(&calculator, 1.0, false);
@@ -239,8 +239,8 @@ mod tests {
 
     #[test]
     fn test_lcss_with_precomputed_distances() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let distance_matrix =
             crate::distance::utils::precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);

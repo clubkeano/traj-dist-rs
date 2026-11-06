@@ -30,8 +30,8 @@ use std::str::FromStr;
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 /// result = traj_dist_rs.edr(t1, t2, "euclidean", eps=0.5)
 /// print(result.distance)  # Distance value
 /// print(result.matrix)  # None
@@ -91,8 +91,8 @@ pub fn edr(
 /// import numpy as np
 ///
 /// dist_matrix = np.array([
-///     [1.0, 1.0],
-///     [1.0, 1.0],
+///     [1.0, 1.0, 0.0],
+///     [1.0, 1.0, 0.0],
 /// ])
 ///
 /// # Without matrix

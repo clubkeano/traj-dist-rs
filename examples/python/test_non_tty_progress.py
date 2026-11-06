@@ -18,7 +18,7 @@ def main():
     # Generate 1000 trajectories, 200 points each
     # 1000 * 999 / 2 = 499,500 pairs, should take > 10s
     np.random.seed(42)
-    trajectories = [np.random.rand(200, 2) for _ in range(1000)]
+    trajectories = [np.random.rand(200, 3) for _ in range(1000)]
 
     metric = traj_dist_rs.Metric.dtw(type_d="euclidean")
 

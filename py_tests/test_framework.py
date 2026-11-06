@@ -265,7 +265,7 @@ class BaseDistanceTest(ABC):
         if self.algorithm_name == "erp":
             param_name = config["hyperparameter_name"]
             if hyperparameter_value is None:
-                hyperparameter_value = [0.0, 0.0]
+                hyperparameter_value = [0.0, 0.0, 0.0]
             # Get actual function name (might be erp_compat_traj_dist or erp_standard)
             func_name = self.function_name
             if func_name == "erp_compat_traj_dist":
@@ -335,7 +335,7 @@ class BaseDistanceTest(ABC):
                     hyperparameter_value = 1e-6
                 elif param_name == "g":
                     # For g parameter (ERP), use 0,0, so penalty equals Euclidean distance
-                    hyperparameter_value = [0.0, 0.0]
+                    hyperparameter_value = [0.0, 0.0, 0.0]
                 elif param_name == "precision":
                     # For precision parameter (SOWD), use default value 5
                     hyperparameter_value = 5
@@ -374,7 +374,9 @@ class BaseDistanceTest(ABC):
 
         distances = []
         for row in test_data.iter_rows(named=True):
-            distances.append((row["traj1"], row["traj2"], row["distance"]))
+            distances.append(
+                (pad_to_3d(row["traj1"]), pad_to_3d(row["traj2"]), row["distance"])
+            )
         return distances
 
     def _test_accuracy(
@@ -438,9 +440,9 @@ class BaseDistanceTest(ABC):
             )
 
         if distance_type == "spherical":
-            traj = [[-122.39548, 37.77668], [-122.39539, 37.77644]]
+            traj = [[-122.39548, 37.77668, 0.0], [-122.39539, 37.77644, 0.0]]
         else:
-            traj = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
+            traj = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
 
         distance = self._call_distance_function(
             traj, traj, distance_type, hyperparameter_value
@@ -481,11 +483,11 @@ class BaseDistanceTest(ABC):
             )
 
         if distance_type == "spherical":
-            traj1 = [[-122.39548, 37.77668], [-122.39539, 37.77644]]
-            traj2 = [[-122.39548, 37.77668], [-122.39537, 37.77663]]
+            traj1 = [[-122.39548, 37.77668, 0.0], [-122.39539, 37.77644, 0.0]]
+            traj2 = [[-122.39548, 37.77668, 0.0], [-122.39537, 37.77663, 0.0]]
         else:
-            traj1 = [[0.0, 0.0], [1.0, 1.0]]
-            traj2 = [[0.0, 1.0], [1.0, 0.0]]
+            traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+            traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         distance = self._call_distance_function(
             traj1, traj2, distance_type, hyperparameter_value
@@ -521,9 +523,9 @@ class BaseDistanceTest(ABC):
             )
 
         if distance_type == "spherical":
-            traj1 = [[-122.39548, 37.77668], [-122.39539, 37.77644]]
+            traj1 = [[-122.39548, 37.77668, 0.0], [-122.39539, 37.77644, 0.0]]
         else:
-            traj1 = [[0.0, 0.0], [1.0, 1.0]]
+            traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
 
         traj2 = []
 
@@ -569,11 +571,11 @@ class BaseDistanceTest(ABC):
             )
 
         if distance_type == "spherical":
-            traj1 = [[-122.39548, 37.77668]]
-            traj2 = [[-122.39539, 37.77644]]
+            traj1 = [[-122.39548, 37.77668, 0.0]]
+            traj2 = [[-122.39539, 37.77644, 0.0]]
         else:
-            traj1 = [[0.0, 0.0]]
-            traj2 = [[1.0, 1.0]]
+            traj1 = [[0.0, 0.0, 0.0]]
+            traj2 = [[1.0, 1.0, 0.0]]
 
         distance = self._call_distance_function(
             traj1, traj2, distance_type, hyperparameter_value
@@ -623,16 +625,16 @@ class BaseDistanceTest(ABC):
 
     def _check_invalid_distance_type(self):
         """Check that invalid distance type should raise exception"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         with pytest.raises(ValueError, match="Invalid distance type"):
             self._call_distance_function(traj1, traj2, "invalid")
 
     def _check_valid_distance_types(self):
         """Check valid distance types"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         for distance_type in self.config["distance_types"]:
             distance = self._call_distance_function(traj1, traj2, distance_type)
@@ -647,11 +649,11 @@ class BaseDistanceTest(ABC):
         """Check that invalid trajectory format should raise exception"""
         # Test non-list input
         with pytest.raises(ValueError):
-            self._call_distance_function("not a list", [[0.0, 1.0]], "euclidean")
+            self._call_distance_function("not a list", [[0.0, 1.0, 0.0]], "euclidean")
 
-        # Test point coordinates not having 2 elements
+        # Test point coordinates not having 3 elements
         with pytest.raises(ValueError):
-            self._call_distance_function([[0.0, 1.0, 2.0]], [[0.0, 1.0]], "euclidean")
+            self._call_distance_function([[0.0, 1.0]], [[0.0, 1.0, 0.0]], "euclidean")
 
 
 class DistanceTestWithHyperparameters(BaseDistanceTest):
@@ -676,11 +678,11 @@ class DistanceTestWithHyperparameters(BaseDistanceTest):
             large_value: Large hyperparameter value
         """
         if distance_type == "spherical":
-            traj1 = [[-122.39548, 37.77668], [-122.39539, 37.77644]]
-            traj2 = [[-122.39548, 37.77668], [-122.39537, 37.77663]]
+            traj1 = [[-122.39548, 37.77668, 0.0], [-122.39539, 37.77644, 0.0]]
+            traj2 = [[-122.39548, 37.77668, 0.0], [-122.39537, 37.77663, 0.0]]
         else:
-            traj1 = [[0.0, 0.0], [1.0, 1.0]]
-            traj2 = [[0.0, 0.1], [1.0, 1.1]]
+            traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+            traj2 = [[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]]
 
         param_name = self.config["hyperparameter_name"]
 
@@ -756,8 +758,8 @@ class DistanceTestWithHyperparameters(BaseDistanceTest):
 
         if param_name == "eps":
             # For LCSS and EDR, eps < 0 should not match any points (since distance is always >= 0)
-            traj1 = [[0.0, 0.0], [1.0, 1.0]]
-            traj2 = [[0.0, 0.0], [1.0, 1.0]]
+            traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+            traj2 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
 
             distance = self._call_distance_function(
                 traj1, traj2, distance_type, negative_value
@@ -765,6 +767,18 @@ class DistanceTestWithHyperparameters(BaseDistanceTest):
             assert (
                 distance == 1.0
             ), f"{self.algorithm_name.upper()} negative eps should not match any points, distance should be 1.0, actual: {distance}"
+
+
+
+def pad_to_3d(traj):
+    """
+    Pad a trajectory of 2D points to 3D by appending z=0.0.
+
+    The reference fixtures were generated by the original 2D traj-dist and are
+    stored as (x, y) pairs. The Rust implementation now requires (x, y, z), and a
+    zero z component leaves every reference distance unchanged.
+    """
+    return [[*p, 0.0] if len(p) == 2 else list(p) for p in traj]
 
 
 def load_test_data_by_metainfo(metainfo: Metainfo, data_dir):
@@ -804,7 +818,8 @@ def get_hyperparameter_value_from_metainfo(metainfo: Metainfo):
     if metainfo.eps is not None:
         return metainfo.eps
     elif metainfo.g is not None:
-        return metainfo.g
+        # 2D fixtures store g as [x, y]; pad to 3D to match the Rust API
+        return [*metainfo.g, 0.0] if len(metainfo.g) == 2 else metainfo.g
     elif metainfo.precision is not None:
         return metainfo.precision
     return None
@@ -854,7 +869,7 @@ class HyperparameterUtil:
         if param_name == "eps":
             return 1e-6
         elif param_name == "g":
-            return [0.0, 0.0]
+            return [0.0, 0.0, 0.0]
         elif param_name == "precision":
             return 5
         return None

@@ -185,29 +185,29 @@ def cdist(
 
     # Using numpy arrays (zero-copy)
     trajectories_a = [
-        np.array([[0.0, 0.0], [1.0, 1.0]]),
-        np.array([[0.0, 1.0], [1.0, 0.0]])
+        np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+        np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
     ]
     trajectories_b = [
-        np.array([[0.5, 0.5], [1.5, 1.5]]),
-        np.array([[0.5, 1.5], [1.5, 0.5]])
+        np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
+        np.array([[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]])
     ]
     distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric)
     print(distances.shape)  # (2, 2)
 
     # Using lists (will be copied)
     trajectories_a = [
-        [[0.0, 0.0], [1.0, 1.0]],
-        [[0.0, 1.0], [1.0, 0.0]]
+        [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+        [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     ]
     trajectories_b = [
-        [[0.5, 0.5], [1.5, 1.5]],
-        [[0.5, 1.5], [1.5, 0.5]]
+        [[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]],
+        [[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]]
     ]
     distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric)
 
     # Using ERP with gap point parameter
-    metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 1.0], type_d="euclidean")
+    metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 1.0, 0.0], type_d="euclidean")
     distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric_erp)
 
     # With progress bar
@@ -243,8 +243,8 @@ def discret_frechet(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     result = traj_dist_rs.discret_frechet(t1, t2, "euclidean")
     print(result.distance)  # Distance value
     print(result.matrix)  # None
@@ -280,8 +280,8 @@ def discret_frechet_with_matrix(
     import numpy as np
 
     dist_matrix = np.array([
-        [1.0, 1.0],
-        [1.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
     ])
 
     # Without matrix
@@ -320,8 +320,8 @@ def dtw(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
     # Without matrix
     result = traj_dist_rs.dtw(t1, t2, "euclidean")
@@ -363,13 +363,13 @@ def dtw_with_matrix(
     import traj_dist_rs
     import numpy as np
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
     # Precompute distance matrix
     dist_matrix = np.array([
-        [1.0, 1.0],  # distance from t1[0] to t2[0], t2[1]
-        [1.0, 1.0],  # distance from t1[1] to t2[0], t2[1]
+        [1.0, 1.0, 0.0],  # distance from t1[0] to t2[0], t2[1]
+        [1.0, 1.0, 0.0],  # distance from t1[1] to t2[0], t2[1]
     ])
 
     # Without matrix
@@ -415,8 +415,8 @@ def edr(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     result = traj_dist_rs.edr(t1, t2, "euclidean", eps=0.5)
     print(result.distance)  # Distance value
     print(result.matrix)  # None
@@ -455,8 +455,8 @@ def edr_with_matrix(
     import numpy as np
 
     dist_matrix = np.array([
-        [1.0, 1.0],
-        [1.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
     ])
 
     # Without matrix
@@ -500,8 +500,8 @@ def edwp(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-    t2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+    t2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
     # Without matrix
     result = traj_dist_rs.edwp(t1, t2, False)
@@ -552,13 +552,13 @@ def erp_compat_traj_dist(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
-    result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0])
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+    result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0, 0.0])
     print(result.distance)  # Distance value
     print(result.matrix)  # None
 
-    result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0], use_full_matrix=True)
+    result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=True)
     print(result.matrix)  # numpy array
     ```
     """
@@ -599,11 +599,11 @@ def erp_compat_traj_dist_with_matrix(
     import numpy as np
 
     dist_matrix = np.array([
-        [1.0, 1.0],
-        [1.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
     ])
-    seq0_gap_dists = np.array([1.0, 1.0])
-    seq1_gap_dists = np.array([1.0, 1.0])
+    seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+    seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 
     # Without matrix
     result = traj_dist_rs.erp_compat_traj_dist_with_matrix(dist_matrix, seq0_gap_dists, seq1_gap_dists)
@@ -653,13 +653,13 @@ def erp_standard(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
-    result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0])
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+    result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0, 0.0])
     print(result.distance)  # Distance value
     print(result.matrix)  # None
 
-    result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0], use_full_matrix=True)
+    result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=True)
     print(result.matrix)  # numpy array
     ```
     """
@@ -701,11 +701,11 @@ def erp_standard_with_matrix(
     import numpy as np
 
     dist_matrix = np.array([
-        [1.0, 1.0],
-        [1.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
     ])
-    seq0_gap_dists = np.array([1.0, 1.0])
-    seq1_gap_dists = np.array([1.0, 1.0])
+    seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+    seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 
     # Without matrix
     result = traj_dist_rs.erp_standard_with_matrix(dist_matrix, seq0_gap_dists, seq1_gap_dists)
@@ -747,8 +747,8 @@ def frechet(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]
-    t2 = [[0.0, 0.5], [1.0, 1.5], [2.0, 0.5]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 0.0, 0.0]]
+    t2 = [[0.0, 0.5, 0.0], [1.0, 1.5, 0.0], [2.0, 0.5, 0.0]]
 
     distance = traj_dist_rs.frechet(t1, t2)
     print(f"Frechet distance: {distance}")
@@ -775,8 +775,8 @@ def hausdorff(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     dist = traj_dist_rs.hausdorff(t1, t2, "euclidean")
     ```
     """
@@ -811,8 +811,8 @@ def lcss(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     result = traj_dist_rs.lcss(t1, t2, "euclidean", eps=0.5)
     print(result.distance)  # Distance value
     print(result.matrix)  # None
@@ -851,8 +851,8 @@ def lcss_with_matrix(
     import numpy as np
 
     dist_matrix = np.array([
-        [1.0, 1.0],
-        [1.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
     ])
 
     # Without matrix
@@ -916,17 +916,17 @@ def pdist(
 
     # Using numpy arrays (zero-copy)
     trajectories = [
-        np.array([[0.0, 0.0], [1.0, 1.0]]),
-        np.array([[0.0, 1.0], [1.0, 0.0]]),
-        np.array([[0.5, 0.5], [1.5, 1.5]])
+        np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+        np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
+        np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]])
     ]
     distances = traj_dist_rs.pdist(trajectories, metric=metric)
 
     # Using lists (will be copied)
     trajectories = [
-        [[0.0, 0.0], [1.0, 1.0]],
-        [[0.0, 1.0], [1.0, 0.0]],
-        [[0.5, 0.5], [1.5, 1.5]]
+        [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+        [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]],
+        [[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]
     ]
     distances = traj_dist_rs.pdist(trajectories, metric=metric)
 
@@ -959,8 +959,8 @@ def sspd(
     ```python
     import traj_dist_rs
 
-    t1 = [[0.0, 0.0], [1.0, 1.0]]
-    t2 = [[0.0, 1.0], [1.0, 0.0]]
+    t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     dist = traj_dist_rs.sspd(t1, t2, "euclidean")
     ```
     """

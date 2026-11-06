@@ -15,10 +15,16 @@ fn main() {
 
     // Create a set of sample trajectories
     let num_trajectories = 10;
-    let trajectories: Vec<Vec<[f64; 2]>> = (0..num_trajectories)
+    let trajectories: Vec<Vec<[f64; 3]>> = (0..num_trajectories)
         .map(|_| {
             (0..20)
-                .map(|_| [rand::random::<f64>() * 10.0, rand::random::<f64>() * 10.0])
+                .map(|_| {
+                    [
+                        rand::random::<f64>() * 10.0,
+                        rand::random::<f64>() * 10.0,
+                        rand::random::<f64>() * 10.0,
+                    ]
+                })
                 .collect()
         })
         .collect();
@@ -75,7 +81,7 @@ fn main() {
         (DistanceAlgorithm::Hausdorff, "Hausdorff"),
         (DistanceAlgorithm::LCSS { eps: 0.1 }, "LCSS"),
         (DistanceAlgorithm::EDR { eps: 0.1 }, "EDR"),
-        (DistanceAlgorithm::ERP { g: [0.0, 0.0] }, "ERP"),
+        (DistanceAlgorithm::ERP { g: [0.0, 0.0, 0.0] }, "ERP"),
         (DistanceAlgorithm::Frechet, "Frechet"),
         (DistanceAlgorithm::DiscretFrechet, "Discret Frechet"),
         (DistanceAlgorithm::EDwP, "EDwP"),
@@ -140,16 +146,20 @@ fn main() {
     // Create trajectories with geographic coordinates (latitude, longitude)
     let geo_trajectories = vec![
         vec![
-            [40.7128, -74.0060],
-            [40.7306, -73.9352],
-            [40.6413, -73.7781],
+            [40.7128, -74.0060, 0.0],
+            [40.7306, -73.9352, 0.0],
+            [40.6413, -73.7781, 0.0],
         ], // New York
         vec![
-            [34.0522, -118.2437],
-            [34.0522, -118.2437],
-            [33.9425, -118.4081],
+            [34.0522, -118.2437, 0.0],
+            [34.0522, -118.2437, 0.0],
+            [33.9425, -118.4081, 0.0],
         ], // Los Angeles
-        vec![[51.5074, -0.1278], [51.4700, -0.4543], [51.5055, -0.2799]], // London
+        vec![
+            [51.5074, -0.1278, 0.0],
+            [51.4700, -0.4543, 0.0],
+            [51.5055, -0.2799, 0.0],
+        ], // London
     ];
 
     let metric = Metric::new(DistanceAlgorithm::SSPD, DistanceType::Spherical);

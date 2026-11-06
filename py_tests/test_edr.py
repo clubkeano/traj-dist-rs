@@ -116,8 +116,8 @@ class TestEDRParameterValidation(DistanceTestWithHyperparameters):
 
     def test_edr_eps_parameter(self):
         """Test eps parameter effect"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 0.0], [1.0, 1.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
 
         # Small eps should match identical points (distance is 0)
         distance_small = self._call_distance_function(traj1, traj2, "euclidean", 1e-6)

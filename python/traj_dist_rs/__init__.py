@@ -40,8 +40,8 @@ Examples:
     >>> import traj_dist_rs
     >>>
     >>> # Define two trajectories as lists of [longitude, latitude] pairs
-    >>> t1 = [[0.0, 0.0], [1.0, 1.0]]
-    >>> t2 = [[0.0, 1.0], [1.0, 0.0]]
+    >>> t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+    >>> t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
     >>>
     >>> # Calculate SSPD distance using Euclidean distance
     >>> distance = traj_dist_rs.sspd(t1, t2, "euclidean")

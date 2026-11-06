@@ -103,7 +103,7 @@ pub fn dtw<D: DistanceCalculator>(
             curr_row[0] = f64::INFINITY;
             for j in 1..=n1 {
                 let dist = calculator.dis_between(i - 1, j - 1);
-                
+
                 let min_prev = prev_row[j - 1].min(prev_row[j]).min(curr_row[j - 1]);
                 curr_row[j] = dist + min_prev;
             }
@@ -198,8 +198,8 @@ mod tests {
 
     #[test]
     fn test_dtw_empty_trajectories() {
-        let t0: Vec<[f64; 2]> = vec![];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = dtw(&calculator, false);
@@ -258,9 +258,9 @@ mod tests {
 
     #[test]
     fn test_dtw_with_precomputed_distances_spherical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         // Precompute distance matrix for spherical distances
 
@@ -285,9 +285,9 @@ mod tests {
 
     #[test]
     fn test_dtw_precomputed_vs_trajectory_calculator() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
         // Using TrajectoryCalculator
 

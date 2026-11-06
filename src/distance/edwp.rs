@@ -178,20 +178,38 @@ where
             if diag_score <= col_spatial_score && diag_score <= row_spatial_score {
                 value[i][j] = diag_score;
                 delta[i][j] = diag_score - value[i - 1][j - 1];
-                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
-                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
+                col_edits[i][j] = (
+                    traj2.get(j - 1).x(),
+                    traj2.get(j - 1).y(),
+                    traj2.get(j - 1).z(),
+                );
+                row_edits[i][j] = (
+                    traj1.get(i - 1).x(),
+                    traj1.get(i - 1).y(),
+                    traj1.get(i - 1).z(),
+                );
             } else if col_spatial_score < row_spatial_score
                 || (col_spatial_score == row_spatial_score && t2_len > t1_len)
             {
                 value[i][j] = col_spatial_score;
                 delta[i][j] = col_spatial_score - col_delta;
-                col_edits[i][j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
-                row_edits[i][j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
+                col_edits[i][j] = (
+                    traj2.get(j - 1).x(),
+                    traj2.get(j - 1).y(),
+                    traj2.get(j - 1).z(),
+                );
+                row_edits[i][j] =
+                    t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
             } else {
                 value[i][j] = row_spatial_score;
                 delta[i][j] = row_spatial_score - row_delta;
-                col_edits[i][j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
-                row_edits[i][j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
+                col_edits[i][j] =
+                    t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
+                row_edits[i][j] = (
+                    traj1.get(i - 1).x(),
+                    traj1.get(i - 1).y(),
+                    traj1.get(i - 1).z(),
+                );
             }
         }
     }
@@ -336,20 +354,38 @@ where
             if diag_score <= col_spatial_score && diag_score <= row_spatial_score {
                 curr_value[j] = diag_score;
                 curr_delta[j] = diag_score - prev_value[j - 1];
-                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
-                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
+                curr_col_edits[j] = (
+                    traj2.get(j - 1).x(),
+                    traj2.get(j - 1).y(),
+                    traj2.get(j - 1).z(),
+                );
+                curr_row_edits[j] = (
+                    traj1.get(i - 1).x(),
+                    traj1.get(i - 1).y(),
+                    traj1.get(i - 1).z(),
+                );
             } else if col_spatial_score < row_spatial_score
                 || (col_spatial_score == row_spatial_score && t2_len > t1_len)
             {
                 curr_value[j] = col_spatial_score;
                 curr_delta[j] = col_spatial_score - col_delta;
-                curr_col_edits[j] = (traj2.get(j - 1).x(), traj2.get(j - 1).y(), traj2.get(j - 1).z());
-                curr_row_edits[j] = t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
+                curr_col_edits[j] = (
+                    traj2.get(j - 1).x(),
+                    traj2.get(j - 1).y(),
+                    traj2.get(j - 1).z(),
+                );
+                curr_row_edits[j] =
+                    t1_insert.unwrap_or((traj1.get(i).x(), traj1.get(i).y(), traj1.get(i).z()));
             } else {
                 curr_value[j] = row_spatial_score;
                 curr_delta[j] = row_spatial_score - row_delta;
-                curr_col_edits[j] = t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
-                curr_row_edits[j] = (traj1.get(i - 1).x(), traj1.get(i - 1).y(), traj1.get(i - 1).z());
+                curr_col_edits[j] =
+                    t2_insert.unwrap_or((traj2.get(j).x(), traj2.get(j).y(), traj2.get(j).z()));
+                curr_row_edits[j] = (
+                    traj1.get(i - 1).x(),
+                    traj1.get(i - 1).y(),
+                    traj1.get(i - 1).z(),
+                );
             }
         }
 
@@ -372,8 +408,8 @@ mod tests {
 
     #[test]
     fn test_edwp_simple() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-        let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let result = edwp(&traj1, &traj2, false);
         assert!(result.distance > 0.0);
@@ -382,7 +418,7 @@ mod tests {
 
     #[test]
     fn test_edwp_identical() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
         let result = edwp(&traj1, &traj1, false);
         assert!(result.distance < 1e-6);
@@ -390,8 +426,8 @@ mod tests {
 
     #[test]
     fn test_edwp_empty() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-        let traj2: Vec<[f64; 2]> = vec![];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let traj2: Vec<[f64; 3]> = vec![];
 
         let result = edwp(&traj1, &traj2, false);
         assert_eq!(result.distance, f64::MAX);
@@ -399,8 +435,8 @@ mod tests {
 
     #[test]
     fn test_edwp_single_point() {
-        let traj1 = vec![[0.0, 0.0]];
-        let traj2 = vec![[1.0, 1.0]];
+        let traj1 = vec![[0.0, 0.0, 0.0]];
+        let traj2 = vec![[1.0, 1.0, 0.0]];
 
         let result = edwp(&traj1, &traj2, false);
         // Single point trajectories should have a finite distance
@@ -409,8 +445,8 @@ mod tests {
 
     #[test]
     fn test_edwp_with_matrix_consistency() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let traj2 = vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]];
 
         let result_full = edwp(&traj1, &traj2, true);
         let result_rolling = edwp(&traj1, &traj2, false);
@@ -433,8 +469,8 @@ mod tests {
 
     #[test]
     fn test_edwp_matrix_dimensions() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let traj2 = vec![[0.1, 0.1], [1.1, 1.1]];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let traj2 = vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]];
 
         let result = edwp(&traj1, &traj2, true);
 
@@ -445,8 +481,8 @@ mod tests {
 
     #[test]
     fn test_edwp_symmetry() {
-        let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]];
+        let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let traj2 = vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]];
 
         let result1 = edwp(&traj1, &traj2, false);
         let result2 = edwp(&traj2, &traj1, false);
@@ -464,14 +500,22 @@ mod tests {
     fn test_edwp_matrix_consistency_diverse() {
         // Test with multiple diverse trajectory pairs
         let test_cases = vec![
-            (vec![[0.0, 0.0], [1.0, 1.0]], vec![[0.1, 0.1], [1.1, 1.1]]),
             (
-                vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]],
-                vec![[0.1, 0.1], [1.1, 1.1]],
+                vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+                vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]],
             ),
             (
-                vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]],
-                vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]],
+                vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]],
+                vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]],
+            ),
+            (
+                vec![
+                    [0.0, 0.0, 0.0],
+                    [1.0, 1.0, 0.0],
+                    [2.0, 2.0, 0.0],
+                    [3.0, 3.0, 0.0],
+                ],
+                vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]],
             ),
         ];
 

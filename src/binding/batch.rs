@@ -105,7 +105,9 @@ impl PyMetric {
                 "ERP 'g' parameter must have at least 3 elements.",
             ));
         }
-        let algorithm = DistanceAlgorithm::ERP { g: [g[0], g[1], g[2]] };
+        let algorithm = DistanceAlgorithm::ERP {
+            g: [g[0], g[1], g[2]],
+        };
         let calculator = build_calculator(algorithm, type_d)?;
         Ok(Self { inner: calculator })
     }
@@ -198,17 +200,17 @@ fn build_calculator(algorithm: DistanceAlgorithm, type_d: &str) -> PyResult<Metr
 ///
 /// # Using numpy arrays (zero-copy)
 /// trajectories = [
-///     np.array([[0.0, 0.0], [1.0, 1.0]]),
-///     np.array([[0.0, 1.0], [1.0, 0.0]]),
-///     np.array([[0.5, 0.5], [1.5, 1.5]])
+///     np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+///     np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
+///     np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]])
 /// ]
 /// distances = traj_dist_rs.pdist(trajectories, metric=metric)
 ///
 /// # Using lists (will be copied)
 /// trajectories = [
-///     [[0.0, 0.0], [1.0, 1.0]],
-///     [[0.0, 1.0], [1.0, 0.0]],
-///     [[0.5, 0.5], [1.5, 1.5]]
+///     [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+///     [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]],
+///     [[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]
 /// ]
 /// distances = traj_dist_rs.pdist(trajectories, metric=metric)
 ///
@@ -303,29 +305,29 @@ pub fn pdist<'py>(
 ///
 /// # Using numpy arrays (zero-copy)
 /// trajectories_a = [
-///     np.array([[0.0, 0.0], [1.0, 1.0]]),
-///     np.array([[0.0, 1.0], [1.0, 0.0]])
+///     np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+///     np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
 /// ]
 /// trajectories_b = [
-///     np.array([[0.5, 0.5], [1.5, 1.5]]),
-///     np.array([[0.5, 1.5], [1.5, 0.5]])
+///     np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
+///     np.array([[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]])
 /// ]
 /// distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric)
 /// print(distances.shape)  # (2, 2)
 ///
 /// # Using lists (will be copied)
 /// trajectories_a = [
-///     [[0.0, 0.0], [1.0, 1.0]],
-///     [[0.0, 1.0], [1.0, 0.0]]
+///     [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+///     [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 /// ]
 /// trajectories_b = [
-///     [[0.5, 0.5], [1.5, 1.5]],
-///     [[0.5, 1.5], [1.5, 0.5]]
+///     [[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]],
+///     [[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]]
 /// ]
 /// distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric)
 ///
 /// # Using ERP with gap point parameter
-/// metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 1.0], type_d="euclidean")
+/// metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 1.0, 0.0], type_d="euclidean")
 /// distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric_erp)
 ///
 /// # With progress bar

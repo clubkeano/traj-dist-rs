@@ -12,9 +12,9 @@
 //! ## Implementations
 //!
 //! This module provides implementations of these traits for common types:
-//! - `[f64; 2]` - Array of two f64 values (x, y)
-//! - `&[f64; 2]` - Reference to array
-//! - `Vec<[f64; 2]>` - Vector of coordinate arrays
+//! - `[f64; 3]` - Array of two f64 values (x, y)
+//! - `&[f64; 3]` - Reference to array
+//! - `Vec<[f64; 3]>` - Vector of coordinate arrays
 //!
 //! ## Usage
 //!
@@ -140,7 +140,7 @@ impl AsCoord for &[f64; 3] {
 
 /// Implementation of `CoordSequence` for vector of 2-element f64 arrays
 ///
-/// This implementation allows `Vec<[f64; 2]>` to be used as a sequence of coordinates,
+/// This implementation allows `Vec<[f64; 3]>` to be used as a sequence of coordinates,
 /// which is a common representation for trajectories.
 impl CoordSequence for Vec<[f64; 3]> {
     type Coord = [f64; 3];

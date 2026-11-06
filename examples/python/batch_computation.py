@@ -15,7 +15,7 @@ print("=" * 60)
 # Create a set of sample trajectories
 num_trajectories = 10
 trajectories = [
-    np.random.rand(20, 2) * 10  # Each trajectory has 20 points in [0, 10] range
+    np.random.rand(20, 3) * 10  # Each trajectory has 20 points in [0, 10] range
     for _ in range(num_trajectories)
 ]
 
@@ -49,7 +49,7 @@ metrics = [
     ("Hausdorff", traj_dist_rs.Metric.hausdorff(type_d="euclidean")),
     ("LCSS", traj_dist_rs.Metric.lcss(eps=0.1, type_d="euclidean")),
     ("EDR", traj_dist_rs.Metric.edr(eps=0.1, type_d="euclidean")),
-    ("ERP", traj_dist_rs.Metric.erp(g=[0.0, 0.0], type_d="euclidean")),
+    ("ERP", traj_dist_rs.Metric.erp(g=[0.0, 0.0, 0.0], type_d="euclidean")),
     ("Frechet", traj_dist_rs.Metric.frechet()),
     ("Discret Frechet", traj_dist_rs.Metric.discret_frechet(type_d="euclidean")),
     ("EDwP", traj_dist_rs.Metric.edwp()),
@@ -89,23 +89,23 @@ print("-" * 60)
 geo_trajectories = [
     np.array(
         [
-            [40.7128, -74.0060],  # New York
-            [40.7306, -73.9352],  # LaGuardia
-            [40.6413, -73.7781],  # JFK
+            [40.7128, -74.0060, 0.0],  # New York
+            [40.7306, -73.9352, 0.0],  # LaGuardia
+            [40.6413, -73.7781, 0.0],  # JFK
         ]
     ),
     np.array(
         [
-            [34.0522, -118.2437],  # Los Angeles
-            [34.0522, -118.2437],  # LAX (approximate)
-            [33.9425, -118.4081],  # Another LA area point
+            [34.0522, -118.2437, 0.0],  # Los Angeles
+            [34.0522, -118.2437, 0.0],  # LAX (approximate)
+            [33.9425, -118.4081, 0.0],  # Another LA area point
         ]
     ),
     np.array(
         [
-            [51.5074, -0.1278],  # London
-            [51.4700, -0.4543],  # Heathrow
-            [51.5055, -0.2799],  # Another London area point
+            [51.5074, -0.1278, 0.0],  # London
+            [51.4700, -0.4543, 0.0],  # Heathrow
+            [51.5055, -0.2799, 0.0],  # Another London area point
         ]
     ),
 ]

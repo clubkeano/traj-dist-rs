@@ -15,11 +15,26 @@ fn main() {
     println!("============================================================");
 
     // Define sample trajectories
-    let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]];
+    let traj1 = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+    ];
 
-    let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1], [3.1, 3.1]];
+    let traj2 = vec![
+        [0.1, 0.1, 0.0],
+        [1.1, 1.1, 0.0],
+        [2.1, 2.1, 0.0],
+        [3.1, 3.1, 0.0],
+    ];
 
-    let traj3 = vec![[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0]];
+    let traj3 = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        [3.0, 0.0, 0.0],
+    ];
 
     // SSPD (Symmetric Segment-Path Distance)
     println!("\n1. SSPD (Symmetric Segment-Path Distance)");
@@ -122,7 +137,7 @@ fn main() {
     println!("{}", "-".repeat(40));
     // Standard ERP implementation
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
-    let gap_point = [0.0, 0.0]; // Gap point for ERP
+    let gap_point = [0.0, 0.0, 0.0]; // Gap point for ERP
     let result_standard = erp_standard(&calculator, &gap_point, true);
     println!("  Standard ERP distance: {:.6}", result_standard.distance);
     if let Some(matrix) = &result_standard.matrix {

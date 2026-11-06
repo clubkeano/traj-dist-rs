@@ -25,8 +25,8 @@ use std::str::FromStr;
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 ///
 /// # Without matrix
 /// result = traj_dist_rs.dtw(t1, t2, "euclidean")
@@ -94,13 +94,13 @@ pub fn dtw<'py>(
 /// import traj_dist_rs
 /// import numpy as np
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 ///
 /// # Precompute distance matrix
 /// dist_matrix = np.array([
-///     [1.0, 1.0],  # distance from t1[0] to t2[0], t2[1]
-///     [1.0, 1.0],  # distance from t1[1] to t2[0], t2[1]
+///     [1.0, 1.0, 0.0],  # distance from t1[0] to t2[0], t2[1]
+///     [1.0, 1.0, 0.0],  # distance from t1[1] to t2[0], t2[1]
 /// ])
 ///
 /// # Without matrix

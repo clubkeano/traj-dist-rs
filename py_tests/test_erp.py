@@ -56,30 +56,30 @@ class TestERPCompatTrajDistEuclidean(DistanceTestWithHyperparameters):
 
     def test_erp_compat_euclidean_identical_trajectories(self):
         """Test that distance for identical trajectories should be close to 0"""
-        self._check_identical_trajectories("euclidean", g=[0.0, 0.0])
+        self._check_identical_trajectories("euclidean", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_euclidean_simple_case(self):
         """Test simple trajectory pair"""
-        self._check_simple_case("euclidean", g=[0.0, 0.0])
+        self._check_simple_case("euclidean", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_euclidean_empty_trajectory(self):
         """Test empty trajectory case"""
-        self._check_empty_trajectory("euclidean", g=[0.0, 0.0])
+        self._check_empty_trajectory("euclidean", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_euclidean_g_effect(self):
         """Test g parameter effect"""
         # Use different g values
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         dist_g_small = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         dist_g_medium = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[10.0, 10.0]
+            traj1, traj2, "euclidean", g=[10.0, 10.0, 0.0]
         ).distance
         dist_g_large = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[100.0, 100.0]
+            traj1, traj2, "euclidean", g=[100.0, 100.0, 0.0]
         ).distance
 
         # The farther the g point is from the trajectory, the larger the distance should be (because insertion/deletion penalty is larger)
@@ -91,12 +91,12 @@ class TestERPCompatTrajDistEuclidean(DistanceTestWithHyperparameters):
 
     def test_erp_compat_euclidean_single_point(self):
         """Test single point trajectory"""
-        self._check_single_point("euclidean", g=[0.0, 0.0])
+        self._check_single_point("euclidean", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_euclidean_centroid(self):
         """Test using centroid as gap point"""
-        traj1 = [[0.0, 0.0], [2.0, 2.0]]
-        traj2 = [[0.0, 2.0], [2.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.0, 2.0, 0.0], [2.0, 0.0, 0.0]]
 
         # Use centroid (g=None)
         dist_centroid = traj_dist_rs.erp_compat_traj_dist(
@@ -104,7 +104,7 @@ class TestERPCompatTrajDistEuclidean(DistanceTestWithHyperparameters):
         ).distance
         # Use manually calculated centroid
         dist_manual = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[1.0, 1.0]
+            traj1, traj2, "euclidean", g=[1.0, 1.0, 0.0]
         ).distance
 
         # Both should be the same
@@ -153,22 +153,22 @@ class TestERPCompatTrajDistSpherical(DistanceTestWithHyperparameters):
 
     def test_erp_compat_spherical_identical_trajectories(self):
         """Test that distance for identical trajectories should be close to 0"""
-        self._check_identical_trajectories("spherical", g=[0.0, 0.0])
+        self._check_identical_trajectories("spherical", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_spherical_simple_case(self):
         """Test simple trajectory pair"""
-        self._check_simple_case("spherical", g=[0.0, 0.0])
+        self._check_simple_case("spherical", g=[0.0, 0.0, 0.0])
 
     def test_erp_compat_spherical_g_effect(self):
         """Test g parameter effect"""
-        traj1 = [[0.0, 0.0], [0.01, 0.01]]
-        traj2 = [[0.0, 0.01], [0.01, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [0.01, 0.01, 0.0]]
+        traj2 = [[0.0, 0.01, 0.0], [0.01, 0.0, 0.0]]
 
         dist_g_small = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "spherical", g=[0.0, 0.0]
+            traj1, traj2, "spherical", g=[0.0, 0.0, 0.0]
         ).distance
         dist_g_medium = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "spherical", g=[0.005, 0.005]
+            traj1, traj2, "spherical", g=[0.005, 0.005, 0.0]
         ).distance
 
         # The farther the g point is from the trajectory, the larger the distance should be
@@ -179,8 +179,8 @@ class TestERPCompatTrajDistSpherical(DistanceTestWithHyperparameters):
 
     def test_erp_compat_spherical_centroid(self):
         """Test using centroid as gap point"""
-        traj1 = [[0.0, 0.0], [0.01, 0.01]]
-        traj2 = [[0.0, 0.01], [0.01, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [0.01, 0.01, 0.0]]
+        traj2 = [[0.0, 0.01, 0.0], [0.01, 0.0, 0.0]]
 
         # Use centroid (g=None)
         dist_centroid = traj_dist_rs.erp_compat_traj_dist(
@@ -188,7 +188,7 @@ class TestERPCompatTrajDistSpherical(DistanceTestWithHyperparameters):
         ).distance
         # Use manually calculated centroid
         dist_manual = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "spherical", g=[0.005, 0.005]
+            traj1, traj2, "spherical", g=[0.005, 0.005, 0.0]
         ).distance
 
         # Both should be the same
@@ -221,12 +221,12 @@ class TestERPCompatTrajDistParameterValidation(DistanceTestWithHyperparameters):
 
     def test_erp_compat_g_parameter(self):
         """Test g parameter effect"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 0.0], [1.0, 1.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
 
         # g point on trajectory, distance should be close to 0
         distance_on_traj = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         assert distance_on_traj < 1e-6
 
@@ -234,24 +234,22 @@ class TestERPCompatTrajDistParameterValidation(DistanceTestWithHyperparameters):
         # Note: Due to traj-dist's bug, for completely identical trajectories, distance is 0 regardless of where g point is
         # Here only test that g parameter can be correctly passed
         distance_far = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[1000.0, 1000.0]
+            traj1, traj2, "euclidean", g=[1000.0, 1000.0, 0.0]
         ).distance
         # For identical trajectories, distance should be 0
         assert distance_far < 1e-6
 
     def test_erp_compat_invalid_g_parameter(self):
         """Test invalid g parameter"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
-        # g parameter must have 2 coordinates
+        # g parameter must have 3 coordinates
         with pytest.raises(ValueError):
             traj_dist_rs.erp_compat_traj_dist(traj1, traj2, "euclidean", g=[0.0])
 
         with pytest.raises(ValueError):
-            traj_dist_rs.erp_compat_traj_dist(
-                traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
-            )
+            traj_dist_rs.erp_compat_traj_dist(traj1, traj2, "euclidean", g=[0.0, 0.0])
 
 
 class TestERPCompatVsStandardComparison:
@@ -259,16 +257,16 @@ class TestERPCompatVsStandardComparison:
 
     def test_erp_compat_vs_standard_euclidean(self):
         """Test differences between compat and standard versions (Euclidean distance)"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0], [2.0, 1.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 1.0, 0.0]]
 
         # Use compat version (matches traj-dist's bug)
         dist_compat = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         # Use standard version (correct implementation)
         dist_standard = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
 
         # Both should be different because traj-dist has a bug
@@ -280,16 +278,16 @@ class TestERPCompatVsStandardComparison:
 
     def test_erp_compat_vs_standard_spherical(self):
         """Test differences between compat and standard versions (Spherical distance)"""
-        traj1 = [[0.0, 0.0], [0.005, 0.005], [0.01, 0.01]]
-        traj2 = [[0.0, 0.005], [0.005, 0.0], [0.01, 0.005]]
+        traj1 = [[0.0, 0.0, 0.0], [0.005, 0.005, 0.0], [0.01, 0.01, 0.0]]
+        traj2 = [[0.0, 0.005, 0.0], [0.005, 0.0, 0.0], [0.01, 0.005, 0.0]]
 
         # Use compat version (matches traj-dist's bug)
         dist_compat = traj_dist_rs.erp_compat_traj_dist(
-            traj1, traj2, "spherical", g=[0.0, 0.0]
+            traj1, traj2, "spherical", g=[0.0, 0.0, 0.0]
         ).distance
         # Use standard version (correct implementation)
         dist_standard = traj_dist_rs.erp_standard(
-            traj1, traj2, "spherical", g=[0.0, 0.0]
+            traj1, traj2, "spherical", g=[0.0, 0.0, 0.0]
         ).distance
 
         # Both should be different because traj-dist has a bug
@@ -301,35 +299,35 @@ class TestERPStandardImplementation:
 
     def test_erp_standard_basic_functionality(self):
         """Test standard implementation basic functionality"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         # Standard implementation should return a reasonable distance value
         dist_standard = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         assert dist_standard > 0.0
 
         # Spherical distance should also work
         dist_standard_spherical = traj_dist_rs.erp_standard(
-            traj1, traj2, "spherical", g=[0.0, 0.0]
+            traj1, traj2, "spherical", g=[0.0, 0.0, 0.0]
         ).distance
         assert dist_standard_spherical > 0.0
 
     def test_erp_standard_identical_trajectories(self):
         """Test standard implementation: distance for identical trajectories should be close to 0"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 0.0], [1.0, 1.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
 
         dist = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         assert dist < 1e-6
 
     def test_erp_standard_centroid(self):
         """Test standard implementation: using centroid as gap point"""
-        traj1 = [[0.0, 0.0], [2.0, 2.0]]
-        traj2 = [[0.0, 2.0], [2.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.0, 2.0, 0.0], [2.0, 0.0, 0.0]]
 
         # Use centroid (g=None)
         dist_centroid = traj_dist_rs.erp_standard(
@@ -337,7 +335,7 @@ class TestERPStandardImplementation:
         ).distance
         # Use manually calculated centroid
         dist_manual = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[1.0, 1.0]
+            traj1, traj2, "euclidean", g=[1.0, 1.0, 0.0]
         ).distance
 
         # Both should be the same
@@ -345,17 +343,17 @@ class TestERPStandardImplementation:
 
     def test_erp_standard_g_effect(self):
         """Test standard implementation: g parameter effect"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.0, 1.0], [1.0, 0.0]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         dist_g_small = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[0.0, 0.0]
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0]
         ).distance
         dist_g_medium = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[10.0, 10.0]
+            traj1, traj2, "euclidean", g=[10.0, 10.0, 0.0]
         ).distance
         dist_g_large = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[100.0, 100.0]
+            traj1, traj2, "euclidean", g=[100.0, 100.0, 0.0]
         ).distance
 
         # The farther the g point is from the trajectory, the larger the distance should be

@@ -37,13 +37,13 @@ use std::str::FromStr;
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
-/// result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0])
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+/// result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0, 0.0])
 /// print(result.distance)  # Distance value
 /// print(result.matrix)  # None
 ///
-/// result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0], use_full_matrix=True)
+/// result = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=True)
 /// print(result.matrix)  # numpy array
 /// ```
 #[gen_stub_pyfunction]
@@ -152,13 +152,13 @@ pub fn erp_compat_traj_dist(
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
-/// result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0])
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+/// result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0, 0.0])
 /// print(result.distance)  # Distance value
 /// print(result.matrix)  # None
 ///
-/// result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0], use_full_matrix=True)
+/// result = traj_dist_rs.erp_standard(t1, t2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=True)
 /// print(result.matrix)  # numpy array
 /// ```
 #[gen_stub_pyfunction]
@@ -266,11 +266,11 @@ pub fn erp_standard(
 /// import numpy as np
 ///
 /// dist_matrix = np.array([
-///     [1.0, 1.0],
-///     [1.0, 1.0],
+///     [1.0, 1.0, 0.0],
+///     [1.0, 1.0, 0.0],
 /// ])
-/// seq0_gap_dists = np.array([1.0, 1.0])
-/// seq1_gap_dists = np.array([1.0, 1.0])
+/// seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+/// seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 ///
 /// # Without matrix
 /// result = traj_dist_rs.erp_compat_traj_dist_with_matrix(dist_matrix, seq0_gap_dists, seq1_gap_dists)
@@ -396,11 +396,11 @@ pub fn erp_compat_traj_dist_with_matrix<'py>(
 /// import numpy as np
 ///
 /// dist_matrix = np.array([
-///     [1.0, 1.0],
-///     [1.0, 1.0],
+///     [1.0, 1.0, 0.0],
+///     [1.0, 1.0, 0.0],
 /// ])
-/// seq0_gap_dists = np.array([1.0, 1.0])
-/// seq1_gap_dists = np.array([1.0, 1.0])
+/// seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+/// seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 ///
 /// # Without matrix
 /// result = traj_dist_rs.erp_standard_with_matrix(dist_matrix, seq0_gap_dists, seq1_gap_dists)

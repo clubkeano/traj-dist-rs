@@ -56,8 +56,8 @@ use crate::distance::base::DistanceCalculator;
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 0.1], [1.0, 1.1]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 /// let result = discret_frechet(&calculator, false);
@@ -152,8 +152,8 @@ pub fn discret_frechet<D: DistanceCalculator>(
 /// ```rust
 /// use traj_dist_rs::distance::discret_frechet::discret_frechet_euclidean;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 0.1], [1.0, 1.1]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 ///
 /// let result = discret_frechet_euclidean(&traj1, &traj2, false);
 /// println!("Discrete Fréchet distance: {}", result.distance);
@@ -181,8 +181,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let dist = discret_frechet(&calculator, false);
@@ -192,8 +192,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result = discret_frechet(&calculator, false);
@@ -206,8 +206,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let dist = discret_frechet_euclidean(&t0, &t1, false);
         println!("Discret Frechet Euclidean distance: {}", dist);
@@ -216,8 +216,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let result = discret_frechet_euclidean(&t0, &t1, false);
         println!(
@@ -229,8 +229,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_euclidean_empty() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![];
 
         let result = discret_frechet_euclidean(&t0, &t1, false);
         println!(
@@ -242,8 +242,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_euclidean_single_point() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0]];
-        let t1: Vec<[f64; 2]> = vec![[1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[1.0, 1.0, 0.0]];
 
         let result = discret_frechet_euclidean(&t0, &t1, false);
         println!(
@@ -258,8 +258,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_consistency_between_modes() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let result_optimized = discret_frechet(&calculator, false);
@@ -277,8 +277,8 @@ mod tests {
 
     #[test]
     fn test_discret_frechet_with_precomputed_distances() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let distance_matrix =
             crate::distance::utils::precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);

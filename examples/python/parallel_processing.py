@@ -23,7 +23,7 @@ print(
     f"\nCreating {num_trajectories} trajectories with {trajectory_length} points each..."
 )
 trajectories = [
-    np.random.rand(trajectory_length, 2) * 10 for _ in range(num_trajectories)
+    np.random.rand(trajectory_length, 3) * 10 for _ in range(num_trajectories)
 ]
 
 # Example 1: Sequential vs Parallel Comparison

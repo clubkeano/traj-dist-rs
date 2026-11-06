@@ -25,8 +25,8 @@
 //! use traj_dist_rs::distance::spherical::great_circle_distance;
 //!
 //! // New York to London
-//! let nyc = [-74.006, 40.7128];
-//! let london = [-0.1278, 51.5074];
+//! let nyc = [-74.006, 40.7128, 0.0];
+//! let london = [-0.1278, 51.5074, 0.0];
 //! let dist = great_circle_distance(&nyc, &london);
 //! // Approximately 5570 km
 //! ```
@@ -59,7 +59,7 @@ const R: f64 = 6378137.0; // Earth radius in meters
 /// ```rust
 /// use traj_dist_rs::distance::spherical::SphericalTrajectoryCache;
 ///
-/// let trajectory = vec![[0.0, 40.0], [1.0, 41.0], [2.0, 42.0]];
+/// let trajectory = vec![[0.0, 40.0, 0.0], [1.0, 41.0, 0.0], [2.0, 42.0, 0.0]];
 /// let cache = SphericalTrajectoryCache::from_trajectory(&trajectory);
 /// ```
 pub struct SphericalTrajectoryCache {
@@ -280,8 +280,8 @@ mod tests {
     #[test]
     fn test_great_circle_distance() {
         // Distance from New York to London
-        let p1: [f64; 2] = [-74.006, 40.7128];
-        let p2: [f64; 2] = [-0.1278, 51.5074];
+        let p1: [f64; 3] = [-74.006, 40.7128, 0.0];
+        let p2: [f64; 3] = [-0.1278, 51.5074, 0.0];
         let dist = great_circle_distance(&p1, &p2);
         // Expected distance is approximately 5570 km
         assert!((dist - 5570000.0).abs() < 10000.0);
@@ -290,9 +290,9 @@ mod tests {
     #[test]
     fn test_point_to_path() {
         // Point to path distance test
-        let p1: [f64; 2] = [0.0, 0.0];
-        let p2: [f64; 2] = [10.0, 0.0];
-        let p3: [f64; 2] = [5.0, 1.0];
+        let p1: [f64; 3] = [0.0, 0.0, 0.0];
+        let p2: [f64; 3] = [10.0, 0.0, 0.0];
+        let p3: [f64; 3] = [5.0, 1.0, 0.0];
 
         let dist = point_to_path_simple(&p1, &p2, &p3);
         // The point (5, 1) should be approximately 111 km from the path (0,0) to (10,0)
@@ -301,7 +301,7 @@ mod tests {
 
     #[test]
     fn test_spherical_cache_basic() {
-        let traj: Vec<[f64; 2]> = vec![[0.0, 40.0], [1.0, 41.0], [2.0, 42.0]];
+        let traj: Vec<[f64; 3]> = vec![[0.0, 40.0, 0.0], [1.0, 41.0, 0.0], [2.0, 42.0, 0.0]];
         let cache = SphericalTrajectoryCache::from_trajectory(&traj);
 
         assert_eq!(cache.len(), 3);
@@ -310,8 +310,8 @@ mod tests {
 
     #[test]
     fn test_cached_vs_uncached_distance() {
-        let traj1: Vec<[f64; 2]> = vec![[-74.006, 40.7128], [-73.9857, 40.7484]];
-        let traj2: Vec<[f64; 2]> = vec![[-0.1278, 51.5074], [-0.1676, 51.5552]];
+        let traj1: Vec<[f64; 3]> = vec![[-74.006, 40.7128, 0.0], [-73.9857, 40.7484, 0.0]];
+        let traj2: Vec<[f64; 3]> = vec![[-0.1278, 51.5074, 0.0], [-0.1676, 51.5552, 0.0]];
 
         let cache1 = SphericalTrajectoryCache::from_trajectory(&traj1);
         let cache2 = SphericalTrajectoryCache::from_trajectory(&traj2);
@@ -335,7 +335,7 @@ mod tests {
 
     #[test]
     fn test_empty_trajectory_cache() {
-        let traj: Vec<[f64; 2]> = vec![];
+        let traj: Vec<[f64; 3]> = vec![];
         let cache = SphericalTrajectoryCache::from_trajectory(&traj);
 
         assert_eq!(cache.len(), 0);

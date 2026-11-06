@@ -27,7 +27,7 @@
 //! Spherical distance is not supported.
 
 use crate::distance::euclidean::{
-    euclidean_distance, point_to_segment_distance,
+    circle_line_intersection, euclidean_distance, point_to_segment_distance,
 };
 use crate::traits::{AsCoord, CoordSequence};
 
@@ -45,9 +45,9 @@ fn free_line<C: AsCoord, D: AsCoord, E: AsCoord>(
     let dy = seg_end.y() - seg_start.y();
     let dz = seg_end.z() - seg_start.z();
 
-    // Degenerate segment (single point)
     let segl_sq = dx * dx + dy * dy + dz * dz;
     if segl_sq == 0.0 {
+        // Degenerate segment (single point)
         if euclidean_distance(point, seg_start) > eps {
             return None;
         } else {
@@ -55,13 +55,22 @@ fn free_line<C: AsCoord, D: AsCoord, E: AsCoord>(
         }
     }
 
-    // Check if the closest point on the segment is within eps
+    // Quick rejection: segment entirely outside the eps-ball
     if point_to_segment_distance(point, seg_start, seg_end) > eps {
         return None;
     }
 
-    // Solve |P - S1 - t*D|^2 = eps^2 parametrically (works for any dimension)
-    // Let Q = S1 - P:  t^2*|D|^2 + 2t*(Q·D) + |Q|^2 - eps^2 = 0
+    // Planar inputs (constant z, which covers every 2D trajectory padded with
+    // z = 0) go through the original circle-line construction so the results
+    // stay bit-for-bit compatible with the traj-dist reference implementation.
+    // The decision procedure compares interval bounds to 0.0 and 1.0 exactly,
+    // so even 1e-12 differences in the bounds can change the final answer.
+    if point.z() == seg_start.z() && seg_start.z() == seg_end.z() {
+        return free_line_planar(point, seg_start, seg_end, dx, dy, segl_sq, eps);
+    }
+
+    // General 3D case: solve |P - (S1 + t*D)|^2 = eps^2 for t.
+    // With Q = S1 - P:  t^2*|D|^2 + 2t*(Q.D) + |Q|^2 - eps^2 = 0
     let qx = seg_start.x() - point.x();
     let qy = seg_start.y() - point.y();
     let qz = seg_start.z() - point.z();
@@ -72,33 +81,79 @@ fn free_line<C: AsCoord, D: AsCoord, E: AsCoord>(
 
     let discriminant = b * b - 4.0 * a * c;
 
-    if discriminant < 0.0 {
-        // No intersection (shouldn't happen since we already checked distance)
-        return None;
-    }
-
-    let sd = discriminant.sqrt();
-    let u1 = (-b - sd) / (2.0 * a);
-    let u2 = (-b + sd) / (2.0 * a);
-
-    if (u1 - u2).abs() < f64::EPSILON {
-        // Tangent case
-        if (0.0..=1.0).contains(&u1) {
-            Some((u1, u1))
+    if discriminant <= 0.0 {
+        // Tangent case. The distance check above guarantees the sphere touches
+        // the segment's line, so a slightly negative discriminant is only
+        // rounding error at a critical value; treat it as a single contact
+        // point, matching the `delta <= 0` branch of the planar code.
+        let u = -b / (2.0 * a);
+        if (0.0..=1.0).contains(&u) {
+            Some((u, u))
         } else {
             None
         }
     } else {
-        // Sort [0, 1, u1, u2] and take middle two
+        let sd = discriminant.sqrt();
+        let u1 = (-b - sd) / (2.0 * a);
+        let u2 = (-b + sd) / (2.0 * a);
+
+        // Sort [0, 1, u1, u2] and take the middle two
         let mut sorted = [0.0_f64, 1.0, u1, u2];
         sorted.sort_by(|a, b| a.total_cmp(b));
         Some((sorted[1], sorted[2]))
     }
 }
 
-/// Check if a monotone path exists from origin to destination in the free space
+/// Free-space interval for a point and a segment lying in a common z-plane.
 ///
-/// This is the decision problem: given eps, determine if the Frechet distance is ≤ eps.
+/// Uses the same circle-line intersection arithmetic as the original 2D
+/// implementation (and the traj-dist reference), so planar results are
+/// unchanged by the move to 3D coordinates. The caller has already handled
+/// the degenerate segment and the quick-rejection check.
+fn free_line_planar<C: AsCoord, D: AsCoord, E: AsCoord>(
+    point: &C,
+    seg_start: &D,
+    seg_end: &E,
+    dx: f64,
+    dy: f64,
+    segl_sq: f64,
+    eps: f64,
+) -> Option<(f64, f64)> {
+    let px = point.x();
+    let py = point.y();
+    let s1x = seg_start.x();
+    let s1y = seg_start.y();
+    let s2x = seg_end.x();
+    let s2y = seg_end.y();
+
+    let intersections = circle_line_intersection(px, py, s1x, s1y, s2x, s2y, eps);
+    let (i1x, i1y) = intersections[0];
+    let (i2x, i2y) = intersections[1];
+
+    if i1x != i2x || i1y != i2y {
+        // Two distinct intersection points
+        let u1 = ((i1x - s1x) * dx + (i1y - s1y) * dy) / segl_sq;
+        let u2 = ((i2x - s1x) * dx + (i2y - s1y) * dy) / segl_sq;
+
+        // Sort [0, 1, u1, u2] and take the middle two
+        let mut sorted = [0.0_f64, 1.0, u1, u2];
+        sorted.sort_by(|a, b| a.total_cmp(b));
+        Some((sorted[1], sorted[2]))
+    } else if px == s1x && py == s1y {
+        Some((0.0, 0.0))
+    } else if px == s2x && py == s2y {
+        Some((1.0, 1.0))
+    } else {
+        // Single intersection point (tangent)
+        let u1 = ((i1x - s1x) * dx + (i1y - s1y) * dy) / segl_sq;
+        if (0.0..=1.0).contains(&u1) {
+            Some((u1, u1))
+        } else {
+            None
+        }
+    }
+}
+
 fn decision_problem<T: CoordSequence>(traj_p: &T, traj_q: &T, p: usize, q: usize, eps: f64) -> bool
 where
     T::Coord: AsCoord,
@@ -235,8 +290,8 @@ where
 /// ```rust
 /// use traj_dist_rs::distance::frechet::frechet;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]];
-/// let traj2 = vec![[0.0, 0.5], [1.0, 1.5], [2.0, 0.5]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 0.0, 0.0]];
+/// let traj2 = vec![[0.0, 0.5, 0.0], [1.0, 1.5, 0.0], [2.0, 0.5, 0.0]];
 ///
 /// let distance = frechet(&traj1, &traj2);
 /// println!("Frechet distance: {}", distance);
@@ -275,8 +330,8 @@ mod tests {
 
     #[test]
     fn test_frechet_simple() {
-        let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
         let dist = frechet(&traj1, &traj2);
         assert!(dist > 0.0);
         assert!(dist.is_finite());
@@ -284,7 +339,7 @@ mod tests {
 
     #[test]
     fn test_frechet_identical() {
-        let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]];
+        let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 0.0, 0.0]];
         let dist = frechet(&traj, &traj);
         assert!(
             dist < 1.5e-8,
@@ -295,19 +350,19 @@ mod tests {
 
     #[test]
     fn test_frechet_too_short() {
-        let single: Vec<[f64; 2]> = vec![[0.0, 0.0]];
-        let traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let single: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0]];
+        let traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
         assert_eq!(frechet(&single, &traj), f64::MAX);
         assert_eq!(frechet(&traj, &single), f64::MAX);
 
-        let empty: Vec<[f64; 2]> = vec![];
+        let empty: Vec<[f64; 3]> = vec![];
         assert_eq!(frechet(&empty, &traj), f64::MAX);
     }
 
     #[test]
     fn test_frechet_symmetry() {
-        let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]];
-        let traj2: Vec<[f64; 2]> = vec![[0.0, 0.5], [1.0, 1.5], [2.0, 0.5]];
+        let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 0.0, 0.0]];
+        let traj2: Vec<[f64; 3]> = vec![[0.0, 0.5, 0.0], [1.0, 1.5, 0.0], [2.0, 0.5, 0.0]];
 
         let dist12 = frechet(&traj1, &traj2);
         let dist21 = frechet(&traj2, &traj1);
@@ -322,10 +377,10 @@ mod tests {
 
     #[test]
     fn test_frechet_leq_discret_frechet() {
-        use crate::distance::discrete_frechet::discret_frechet_euclidean;
+        use crate::distance::discret_frechet::discret_frechet_euclidean;
 
-        let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 2.0], [3.0, 1.0]];
-        let traj2: Vec<[f64; 2]> = vec![[0.5, 0.5], [2.0, 1.5], [3.5, 2.5]];
+        let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 2.0, 0.0], [3.0, 1.0, 0.0]];
+        let traj2: Vec<[f64; 3]> = vec![[0.5, 0.5, 0.0], [2.0, 1.5, 0.0], [3.5, 2.5, 0.0]];
 
         let cont_dist = frechet(&traj1, &traj2);
         let disc_dist = discret_frechet_euclidean(&traj1, &traj2, false).distance;
@@ -340,8 +395,13 @@ mod tests {
 
     #[test]
     fn test_frechet_different_lengths() {
-        let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0]];
-        let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [3.0, 1.0]];
+        let traj1: Vec<[f64; 3]> = vec![
+            [0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0],
+            [2.0, 0.0, 0.0],
+            [3.0, 0.0, 0.0],
+        ];
+        let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [3.0, 1.0, 0.0]];
 
         let dist = frechet(&traj1, &traj2);
         assert!(dist > 0.0);
@@ -352,26 +412,26 @@ mod tests {
 
     #[test]
     fn test_free_line_point_inside() {
-        let p = [0.5, 0.5];
-        let s1 = [0.0, 0.0];
-        let s2 = [1.0, 0.0];
+        let p = [0.5, 0.5, 0.0];
+        let s1 = [0.0, 0.0, 0.0];
+        let s2 = [1.0, 0.0, 0.0];
         let result = free_line(&p, &s1, &s2, 1.0);
         assert!(result.is_some());
     }
 
     #[test]
     fn test_free_line_point_outside() {
-        let p = [0.5, 10.0];
-        let s1 = [0.0, 0.0];
-        let s2 = [1.0, 0.0];
+        let p = [0.5, 10.0, 0.0];
+        let s1 = [0.0, 0.0, 0.0];
+        let s2 = [1.0, 0.0, 0.0];
         let result = free_line(&p, &s1, &s2, 0.1);
         assert!(result.is_none());
     }
 
     #[test]
     fn test_free_line_degenerate_segment() {
-        let p = [1.0, 0.0];
-        let s = [0.0, 0.0];
+        let p = [1.0, 0.0, 0.0];
+        let s = [0.0, 0.0, 0.0];
         assert!(free_line(&p, &s, &s, 2.0).is_some());
         assert!(free_line(&p, &s, &s, 0.5).is_none());
     }

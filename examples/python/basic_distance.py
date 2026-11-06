@@ -10,11 +10,11 @@ import traj_dist_rs
 
 # Define sample trajectories
 # Trajectories can be defined as lists of [x, y] coordinates or numpy arrays
-traj1 = np.array([[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]])
+traj1 = np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0], [3.0, 3.0, 0.0]])
 
-traj2 = np.array([[0.1, 0.1], [1.1, 1.1], [2.1, 2.1], [3.1, 3.1]])
+traj2 = np.array([[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0], [3.1, 3.1, 0.0]])
 
-traj3 = np.array([[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0]])
+traj3 = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [3.0, 0.0, 0.0]])
 
 print("=" * 60)
 print("Basic Distance Calculation Examples")
@@ -92,7 +92,7 @@ print(f"  Continuous <= Discrete: {dist_frechet <= result.distance + 1e-10}")
 print("\n8. ERP (Edit distance with Real Penalty)")
 print("-" * 40)
 # Standard ERP implementation
-gap_point = [0.0, 0.0]
+gap_point = [0.0, 0.0, 0.0]
 result_standard = traj_dist_rs.erp_standard(
     traj1, traj2, "euclidean", gap_point, use_full_matrix=True
 )

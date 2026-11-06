@@ -10,7 +10,7 @@ def benchmark_pdist():
     """Benchmark pdist function"""
     # Create 100 trajectories
     np.random.seed(42)
-    trajectories = [np.random.rand(10, 2) * 100 for _ in range(100)]
+    trajectories = [np.random.rand(10, 3) * 100 for _ in range(100)]
 
     print("\n=== pdist Performance Benchmark ===")
     print(f"Number of trajectories: {len(trajectories)}")
@@ -56,8 +56,8 @@ def benchmark_cdist():
     """Benchmark cdist function"""
     # Create 100 trajectories in each collection
     np.random.seed(42)
-    trajectories_a = [np.random.rand(10, 2) * 100 for _ in range(100)]
-    trajectories_b = [np.random.rand(10, 2) * 100 for _ in range(100)]
+    trajectories_a = [np.random.rand(10, 3) * 100 for _ in range(100)]
+    trajectories_b = [np.random.rand(10, 3) * 100 for _ in range(100)]
 
     print("\n=== cdist Performance Benchmark ===")
     print(f"Number of trajectories in A: {len(trajectories_a)}")
@@ -112,7 +112,7 @@ def benchmark_different_algorithms():
     """Benchmark different algorithms"""
     # Create 50 trajectories
     np.random.seed(42)
-    trajectories = [np.random.rand(10, 2) * 100 for _ in range(50)]
+    trajectories = [np.random.rand(10, 3) * 100 for _ in range(50)]
 
     print("\n=== Algorithm Performance Benchmark ===")
     print(f"Number of trajectories: {len(trajectories)}")
@@ -123,7 +123,7 @@ def benchmark_different_algorithms():
         ("Hausdorff", traj_dist_rs.Metric.hausdorff(type_d="euclidean")),
         ("LCSS", traj_dist_rs.Metric.lcss(eps=5.0, type_d="euclidean")),
         ("EDR", traj_dist_rs.Metric.edr(eps=5.0, type_d="euclidean")),
-        ("ERP", traj_dist_rs.Metric.erp(g=[0.0, 0.0], type_d="euclidean")),
+        ("ERP", traj_dist_rs.Metric.erp(g=[0.0, 0.0, 0.0], type_d="euclidean")),
         ("DiscretFrechet", traj_dist_rs.Metric.discret_frechet(type_d="euclidean")),
     ]
 

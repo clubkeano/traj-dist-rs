@@ -19,8 +19,8 @@ use std::str::FromStr;
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0]]
-/// t2 = [[0.0, 1.0], [1.0, 0.0]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+/// t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 /// dist = traj_dist_rs.sspd(t1, t2, "euclidean")
 /// ```
 #[gen_stub_pyfunction]

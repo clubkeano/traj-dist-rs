@@ -19,8 +19,8 @@ use common::{assert_valid_distance, assert_valid_dp_result};
 /// Test SSPD algorithm
 #[test]
 fn test_sspd_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
     assert_valid_distance(dist);
@@ -33,8 +33,8 @@ fn test_sspd_euclidean() {
 /// Test SSPD with spherical distance
 #[test]
 fn test_sspd_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let dist = sspd(&traj1, &traj2, DistanceType::Spherical);
     assert_valid_distance(dist);
@@ -47,8 +47,8 @@ fn test_sspd_spherical() {
 /// Test SSPD symmetry property
 #[test]
 fn test_sspd_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let dist12 = sspd(&traj1, &traj2, DistanceType::Euclidean);
     let dist21 = sspd(&traj2, &traj1, DistanceType::Euclidean);
@@ -65,8 +65,8 @@ fn test_sspd_symmetry() {
 /// Test DTW algorithm
 #[test]
 fn test_dtw_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = dtw(&calculator, false);
@@ -81,8 +81,8 @@ fn test_dtw_euclidean() {
 /// Test DTW with spherical distance
 #[test]
 fn test_dtw_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Spherical);
     let result = dtw(&calculator, false);
@@ -97,8 +97,8 @@ fn test_dtw_spherical() {
 /// Test DTW symmetry property
 #[test]
 fn test_dtw_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calc1 = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result1 = dtw(&calc1, false);
@@ -118,8 +118,8 @@ fn test_dtw_symmetry() {
 /// Test Discret Frechet algorithm
 #[test]
 fn test_discret_frechet_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = discret_frechet(&calculator, false);
@@ -134,8 +134,8 @@ fn test_discret_frechet_euclidean() {
 /// Test Discret Frechet symmetry property
 #[test]
 fn test_discret_frechet_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let calc1 = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result1 = discret_frechet(&calc1, false);
@@ -155,8 +155,8 @@ fn test_discret_frechet_symmetry() {
 /// Test Hausdorff algorithm
 #[test]
 fn test_hausdorff_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let dist = hausdorff(&traj1, &traj2, DistanceType::Euclidean);
 
@@ -170,8 +170,8 @@ fn test_hausdorff_euclidean() {
 /// Test Hausdorff with spherical distance
 #[test]
 fn test_hausdorff_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let dist = hausdorff(&traj1, &traj2, DistanceType::Spherical);
 
@@ -185,8 +185,8 @@ fn test_hausdorff_spherical() {
 /// Test Hausdorff symmetry property
 #[test]
 fn test_hausdorff_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let dist12 = hausdorff(&traj1, &traj2, DistanceType::Euclidean);
     let dist21 = hausdorff(&traj2, &traj1, DistanceType::Euclidean);
@@ -203,8 +203,8 @@ fn test_hausdorff_symmetry() {
 /// Test LCSS algorithm
 #[test]
 fn test_lcss_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1], [2.0, 2.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0], [2.0, 2.1, 0.0]];
 
     let eps = 0.2;
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -221,8 +221,8 @@ fn test_lcss_euclidean() {
 /// Test LCSS with spherical distance
 #[test]
 fn test_lcss_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.01], [1.0, 1.01]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.01, 0.0], [1.0, 1.01, 0.0]];
 
     let eps = 0.1;
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Spherical);
@@ -238,8 +238,8 @@ fn test_lcss_spherical() {
 /// Test LCSS symmetry property
 #[test]
 fn test_lcss_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let eps = 0.1;
     let calc1 = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -260,8 +260,8 @@ fn test_lcss_symmetry() {
 /// Test EDR algorithm
 #[test]
 fn test_edr_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1], [2.0, 2.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0], [2.0, 2.1, 0.0]];
 
     let eps = 0.2;
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -278,8 +278,8 @@ fn test_edr_euclidean() {
 /// Test EDR with spherical distance
 #[test]
 fn test_edr_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.01], [1.0, 1.01]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.01, 0.0], [1.0, 1.01, 0.0]];
 
     let eps = 0.1;
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Spherical);
@@ -295,8 +295,8 @@ fn test_edr_spherical() {
 /// Test EDR symmetry property
 #[test]
 fn test_edr_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let eps = 0.1;
     let calc1 = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -317,10 +317,10 @@ fn test_edr_symmetry() {
 /// Test ERP standard algorithm
 #[test]
 fn test_erp_standard_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
-    let g = [0.0, 0.0];
+    let g = [0.0, 0.0, 0.0];
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = erp_standard(&calculator, &g, false);
 
@@ -334,10 +334,10 @@ fn test_erp_standard_euclidean() {
 /// Test ERP with spherical distance
 #[test]
 fn test_erp_standard_spherical() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
-    let g = [0.0, 0.0];
+    let g = [0.0, 0.0, 0.0];
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Spherical);
     let result = erp_standard(&calculator, &g, false);
 
@@ -351,10 +351,10 @@ fn test_erp_standard_spherical() {
 /// Test ERP compat_traj_dist algorithm
 #[test]
 fn test_erp_compat_traj_dist() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
-    let g = [0.0, 0.0];
+    let g = [0.0, 0.0, 0.0];
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
     let result = erp_compat_traj_dist(&calculator, &g, false);
 
@@ -368,9 +368,9 @@ fn test_erp_compat_traj_dist() {
 /// Test algorithm monotonicity (identical trajectories should have smallest distance)
 #[test]
 fn test_algorithm_monotonicity() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj3: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj3: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // DTW
     let calc_12 = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -397,8 +397,8 @@ fn test_algorithm_monotonicity() {
 /// Test all algorithms with same trajectory pair
 #[test]
 fn test_all_algorithms_same_pair() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     // SSPD
     let dist_sspd = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -426,18 +426,29 @@ fn test_all_algorithms_same_pair() {
     assert_valid_distance(dist_edr);
 
     // ERP
-    let dist_erp = erp_standard(&calc, &[0.0, 0.0], false).distance;
+    let dist_erp = erp_standard(&calc, &[0.0, 0.0, 0.0], false).distance;
     assert_valid_distance(dist_erp);
 }
 
 /// Test algorithms with increasing trajectory lengths
 #[test]
 fn test_algorithms_increasing_length() {
-    let base_traj: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+    let base_traj: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
     // Create trajectories with increasing lengths
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]];
-    let traj3: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [4.0, 4.0]];
+    let traj2: Vec<[f64; 3]> = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+    ];
+    let traj3: Vec<[f64; 3]> = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+        [4.0, 4.0, 0.0],
+    ];
 
     // SSPD
     let dist_2 = sspd(&base_traj, &traj2, DistanceType::Euclidean);
@@ -466,8 +477,12 @@ fn test_algorithms_increasing_length() {
 /// Test algorithms with very close trajectories
 #[test]
 fn test_algorithms_very_close_trajectories() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.001, 0.001], [1.001, 1.001], [2.001, 2.001]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![
+        [0.001, 0.001, 0.0],
+        [1.001, 1.001, 0.0],
+        [2.001, 2.001, 0.0],
+    ];
 
     // SSPD
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -495,8 +510,8 @@ fn test_algorithms_very_close_trajectories() {
 /// Test algorithms with orthogonal trajectories
 #[test]
 fn test_algorithms_orthogonal_trajectories() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 0.0], [2.0, 0.0]]; // Horizontal
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [0.0, 1.0], [0.0, 2.0]]; // Vertical
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0]]; // Horizontal
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 2.0, 0.0]]; // Vertical
 
     // SSPD
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -515,8 +530,8 @@ fn test_algorithms_orthogonal_trajectories() {
 /// Test EDwP algorithm
 #[test]
 fn test_edwp_euclidean() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let result = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, false);
 
@@ -530,8 +545,8 @@ fn test_edwp_euclidean() {
 /// Test EDwP symmetry property
 #[test]
 fn test_edwp_symmetry() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
     let result1 = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, false);
     let result2 = traj_dist_rs::distance::edwp::edwp(&traj2, &traj1, false);
@@ -548,8 +563,8 @@ fn test_edwp_symmetry() {
 /// Test EDwP consistency between full matrix and rolling array modes
 #[test]
 fn test_edwp_consistency_between_modes() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
 
     let result_full = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, true);
     let result_rolling = traj_dist_rs::distance::edwp::edwp(&traj1, &traj2, false);

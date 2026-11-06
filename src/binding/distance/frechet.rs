@@ -26,8 +26,8 @@ use pyo3_stub_gen::{define_stub_info_gatherer, derive::gen_stub_pyfunction};
 /// ```python
 /// import traj_dist_rs
 ///
-/// t1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]
-/// t2 = [[0.0, 0.5], [1.0, 1.5], [2.0, 0.5]]
+/// t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 0.0, 0.0]]
+/// t2 = [[0.0, 0.5, 0.0], [1.0, 1.5, 0.0], [2.0, 0.5, 0.0]]
 ///
 /// distance = traj_dist_rs.frechet(t1, t2)
 /// print(f"Frechet distance: {distance}")

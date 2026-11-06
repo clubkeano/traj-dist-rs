@@ -130,8 +130,8 @@ where
 /// use traj_dist_rs::distance::sspd::sspd;
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 ///
 /// let distance = sspd(&traj1, &traj2, DistanceType::Euclidean);
 /// println!("SSPD distance: {}", distance);
@@ -171,8 +171,8 @@ mod tests {
 
     #[test]
     fn test_sspd_euclidean_simple() {
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let dist = sspd(&t1, &t2, DistanceType::Euclidean);
         println!("SSPD Euclidean distance: {}", dist);
@@ -181,8 +181,8 @@ mod tests {
 
     #[test]
     fn test_sspd_euclidean_identical() {
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let dist = sspd(&t1, &t2, DistanceType::Euclidean);
         println!(
@@ -194,8 +194,8 @@ mod tests {
 
     #[test]
     fn test_sspd_spherical_simple() {
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let dist = sspd(&t1, &t2, DistanceType::Spherical);
         println!("SSPD Spherical distance: {}", dist);
@@ -204,8 +204,8 @@ mod tests {
 
     #[test]
     fn test_sspd_with_both_distance_types() {
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t2: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t2: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let euclidean_dist = sspd(&t1, &t2, DistanceType::Euclidean);
         let spherical_dist = sspd(&t1, &t2, DistanceType::Spherical);

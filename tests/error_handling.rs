@@ -28,8 +28,8 @@ use common::{assert_valid_distance, assert_valid_dp_result};
 /// Test with NaN coordinates
 #[test]
 fn test_nan_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[f64::NAN, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[f64::NAN, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // All algorithms should handle NaN gracefully
     // They should not panic and should return a finite value or handle it appropriately
@@ -94,7 +94,7 @@ fn test_nan_coordinates() {
 
     // ERP
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     // Should handle gracefully
     assert!(
         result.distance.is_finite() || result.distance.is_nan() || result.distance.is_infinite(),
@@ -106,8 +106,8 @@ fn test_nan_coordinates() {
 /// Test with infinity coordinates
 #[test]
 fn test_infinity_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[f64::INFINITY, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[f64::INFINITY, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // All algorithms should handle infinity gracefully
 
@@ -147,7 +147,7 @@ fn test_infinity_coordinates() {
 
     // ERP
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[0.0, 0.0], false);
+    let result = erp_standard(&calculator, &[0.0, 0.0, 0.0], false);
     // Should handle gracefully
     assert!(result.distance.is_finite() || result.distance.is_infinite());
 }
@@ -155,8 +155,8 @@ fn test_infinity_coordinates() {
 /// Test with negative infinity coordinates
 #[test]
 fn test_neg_infinity_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[f64::NEG_INFINITY, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[f64::NEG_INFINITY, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // All algorithms should handle negative infinity gracefully
 
@@ -186,8 +186,8 @@ fn test_neg_infinity_coordinates() {
 /// Test with negative epsilon for LCSS and EDR
 #[test]
 fn test_negative_epsilon() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // LCSS with negative epsilon
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -204,8 +204,8 @@ fn test_negative_epsilon() {
 /// Test with zero epsilon for LCSS and EDR
 #[test]
 fn test_zero_epsilon() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
     // LCSS with zero epsilon
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -222,8 +222,8 @@ fn test_zero_epsilon() {
 /// Test with very large epsilon for LCSS and EDR
 #[test]
 fn test_large_epsilon() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[100.0, 100.0], [101.0, 101.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[100.0, 100.0, 0.0], [101.0, 101.0, 0.0]];
 
     // LCSS with very large epsilon
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -240,8 +240,8 @@ fn test_large_epsilon() {
 /// Test with NaN epsilon for LCSS and EDR
 #[test]
 fn test_nan_epsilon() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
     // LCSS with NaN epsilon
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -258,8 +258,8 @@ fn test_nan_epsilon() {
 /// Test with infinity epsilon for LCSS and EDR
 #[test]
 fn test_infinity_epsilon() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[100.0, 100.0], [101.0, 101.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[100.0, 100.0, 0.0], [101.0, 101.0, 0.0]];
 
     // LCSS with infinity epsilon
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
@@ -276,12 +276,12 @@ fn test_infinity_epsilon() {
 /// Test with NaN gap point for ERP
 #[test]
 fn test_nan_gap_point() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
     // ERP with NaN gap point
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[f64::NAN, f64::NAN], false);
+    let result = erp_standard(&calculator, &[f64::NAN, f64::NAN, 0.0], false);
     // Should handle gracefully
     assert!(result.distance.is_finite() || result.distance.is_nan());
 }
@@ -289,12 +289,12 @@ fn test_nan_gap_point() {
 /// Test with infinity gap point for ERP
 #[test]
 fn test_infinity_gap_point() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.1], [1.0, 1.1]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.1, 0.0], [1.0, 1.1, 0.0]];
 
     // ERP with infinity gap point
     let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
-    let result = erp_standard(&calculator, &[f64::INFINITY, f64::INFINITY], false);
+    let result = erp_standard(&calculator, &[f64::INFINITY, f64::INFINITY, 0.0], false);
     // Should handle gracefully (may return infinity)
     assert!(result.distance.is_finite() || result.distance.is_infinite());
 }
@@ -302,8 +302,8 @@ fn test_infinity_gap_point() {
 /// Test with mixed valid and invalid coordinates
 #[test]
 fn test_mixed_valid_invalid_coordinates() {
-    let traj1: Vec<[f64; 2]> = vec![[0.0, 0.0], [f64::NAN, 1.0], [2.0, 2.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
+    let traj1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [f64::NAN, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
 
     // All algorithms should handle mixed coordinates gracefully
     // SSPD
@@ -325,8 +325,8 @@ fn test_mixed_valid_invalid_coordinates() {
 /// Test with subnormal values (very close to zero)
 #[test]
 fn test_subnormal_values() {
-    let traj1: Vec<[f64; 2]> = vec![[f64::MIN_POSITIVE, f64::MIN_POSITIVE], [1.0, 1.0]];
-    let traj2: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+    let traj1: Vec<[f64; 3]> = vec![[f64::MIN_POSITIVE, f64::MIN_POSITIVE, 0.0], [1.0, 1.0, 0.0]];
+    let traj2: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
     // SSPD
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);

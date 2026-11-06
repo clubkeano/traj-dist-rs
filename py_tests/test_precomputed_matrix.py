@@ -14,8 +14,8 @@ class TestDTWWithMatrix:
 
     def test_dtw_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.dtw(t1, t2, "euclidean")
@@ -38,8 +38,8 @@ class TestDTWWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [1.0, 1.0],
-                [1.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
             ]
         )
 
@@ -60,8 +60,8 @@ class TestDTWWithMatrix:
 
     def test_dtw_with_matrix_consistency(self):
         """Test consistency between precomputed matrix and standard interface"""
-        t1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]]
 
         # Use standard interface
         result_standard = traj_dist_rs.dtw(t1, t2, "euclidean")
@@ -86,8 +86,8 @@ class TestLCSSWithMatrix:
 
     def test_lcss_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.lcss(t1, t2, "euclidean", eps=0.5)
@@ -110,8 +110,8 @@ class TestLCSSWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [0.1, 0.1],
-                [0.1, 0.1],
+                [0.1, 0.1, 0.0],
+                [0.1, 0.1, 0.0],
             ]
         )
 
@@ -138,8 +138,8 @@ class TestEDRWithMatrix:
 
     def test_edr_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.edr(t1, t2, "euclidean", eps=0.5)
@@ -162,8 +162,8 @@ class TestEDRWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [1.0, 1.0],
-                [1.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
             ]
         )
 
@@ -190,8 +190,8 @@ class TestDiscretFrechetWithMatrix:
 
     def test_discret_frechet_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.discret_frechet(t1, t2, "euclidean")
@@ -214,8 +214,8 @@ class TestDiscretFrechetWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [1.0, 1.0],
-                [1.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
             ]
         )
 
@@ -240,9 +240,9 @@ class TestERPStandardWithMatrix:
 
     def test_erp_standard_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
-        g = [0.0, 0.0]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+        g = [0.0, 0.0, 0.0]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.erp_standard(t1, t2, "euclidean", g)
@@ -280,12 +280,12 @@ class TestERPStandardWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [1.0, 1.0],
-                [1.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
             ]
         )
-        seq0_gap_dists = np.array([1.0, 1.0])
-        seq1_gap_dists = np.array([1.0, 1.0])
+        seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+        seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 
         # Don't return full matrix
         result_no_matrix = traj_dist_rs.erp_standard_with_matrix(
@@ -308,9 +308,9 @@ class TestERPCompatWithMatrix:
 
     def test_erp_compat_with_matrix_basic(self):
         """Test basic precomputed distance matrix functionality"""
-        t1 = [[0.0, 0.0], [1.0, 1.0]]
-        t2 = [[0.0, 1.0], [1.0, 0.0]]
-        g = [0.0, 0.0]
+        t1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        t2 = [[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
+        g = [0.0, 0.0, 0.0]
 
         # Calculate using standard interface
         result_standard = traj_dist_rs.erp_compat_traj_dist(t1, t2, "euclidean", g)
@@ -348,12 +348,12 @@ class TestERPCompatWithMatrix:
         """Test precomputed matrix with full DP matrix return"""
         dist_matrix = np.array(
             [
-                [1.0, 1.0],
-                [1.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 0.0],
             ]
         )
-        seq0_gap_dists = np.array([1.0, 1.0])
-        seq1_gap_dists = np.array([1.0, 1.0])
+        seq0_gap_dists = np.array([1.0, 1.0, 0.0])
+        seq1_gap_dists = np.array([1.0, 1.0, 0.0])
 
         # Don't return full matrix
         result_no_matrix = traj_dist_rs.erp_compat_traj_dist_with_matrix(

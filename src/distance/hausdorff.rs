@@ -127,8 +127,8 @@ fn directed_hausdorff_spherical_cached(
 /// use traj_dist_rs::distance::hausdorff::hausdorff;
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 ///
 /// let distance = hausdorff(&traj1, &traj2, DistanceType::Euclidean);
 /// println!("Hausdorff distance: {}", distance);
@@ -254,8 +254,8 @@ mod tests {
 
     #[test]
     fn test_hausdorff_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let dist = hausdorff(&t0, &t1, DistanceType::Euclidean);
         println!("Hausdorff Euclidean distance: {}", dist);
@@ -264,8 +264,8 @@ mod tests {
 
     #[test]
     fn test_hausdorff_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let dist = hausdorff(&t0, &t1, DistanceType::Euclidean);
         println!(
@@ -277,8 +277,8 @@ mod tests {
 
     #[test]
     fn test_hausdorff_spherical_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let dist = hausdorff(&t0, &t1, DistanceType::Spherical);
         println!("Hausdorff Spherical distance: {}", dist);
@@ -287,8 +287,8 @@ mod tests {
 
     #[test]
     fn test_hausdorff_spherical_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
 
         let dist = hausdorff(&t0, &t1, DistanceType::Spherical);
         println!(
@@ -300,8 +300,8 @@ mod tests {
 
     #[test]
     fn test_hausdorff_with_both_distance_types() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
 
         let euclidean_dist = hausdorff(&t0, &t1, DistanceType::Euclidean);
         let spherical_dist = hausdorff(&t0, &t1, DistanceType::Spherical);

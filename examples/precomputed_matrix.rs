@@ -9,7 +9,7 @@ use traj_dist_rs::distance::{
 };
 
 // Type alias for trajectory pairs to reduce type complexity
-type TrajectoryPair = (Vec<[f64; 2]>, Vec<[f64; 2]>);
+type TrajectoryPair = (Vec<[f64; 3]>, Vec<[f64; 3]>);
 
 fn main() {
     println!("============================================================");
@@ -17,11 +17,26 @@ fn main() {
     println!("============================================================");
 
     // Define sample trajectories
-    let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]];
+    let traj1 = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [2.0, 2.0, 0.0],
+        [3.0, 3.0, 0.0],
+    ];
 
-    let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1], [3.1, 3.1]];
+    let traj2 = vec![
+        [0.1, 0.1, 0.0],
+        [1.1, 1.1, 0.0],
+        [2.1, 2.1, 0.0],
+        [3.1, 3.1, 0.0],
+    ];
 
-    let traj3 = vec![[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0]];
+    let traj3 = vec![
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        [3.0, 0.0, 0.0],
+    ];
 
     // Example 1: DTW with precomputed distance matrix
     println!("\n1. DTW with TrajectoryCalculator");
@@ -63,7 +78,7 @@ fn main() {
     println!("  EDR distance (epsilon=0.1): {:.6}", result.distance);
 
     // ERP
-    let gap_point = [0.0, 0.0];
+    let gap_point = [0.0, 0.0, 0.0];
     let result = erp_standard(&calculator, &gap_point, false);
     println!("  ERP distance (gap=[0,0]): {:.6}", result.distance);
 

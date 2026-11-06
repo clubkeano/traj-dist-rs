@@ -17,8 +17,8 @@ class TestEDwPMatrixConsistency(BaseDistanceTest):
 
     def test_edwp_matrix_consistency(self):
         """Test that EDwP produces same distance with and without matrix"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         # Without matrix
         result_no_matrix = traj_dist_rs.edwp(traj1, traj2, False)
@@ -58,8 +58,8 @@ class TestEDwPVsPythonReference(BaseDistanceTest):
 
     def test_edwp_symmetry(self):
         """Test EDwP symmetry property"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         dist1 = traj_dist_rs.edwp(traj1, traj2, False)
         dist2 = traj_dist_rs.edwp(traj2, traj1, False)
@@ -77,8 +77,8 @@ class TestEDwPBoundaryCases(BaseDistanceTest):
 
     def test_edwp_zero_coordinates(self):
         """Test EDwP with zero coordinates"""
-        traj1 = [[0.0, 0.0], [0.0, 0.0]]
-        traj2 = [[1.0, 1.0], [1.0, 1.0]]
+        traj1 = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        traj2 = [[1.0, 1.0, 0.0], [1.0, 1.0, 0.0]]
 
         dist = traj_dist_rs.edwp(traj1, traj2, False)
         assert dist.distance > 0
@@ -86,8 +86,8 @@ class TestEDwPBoundaryCases(BaseDistanceTest):
 
     def test_edwp_negative_coordinates(self):
         """Test EDwP with negative coordinates"""
-        traj1 = [[-1.0, -1.0], [-2.0, -2.0]]
-        traj2 = [[-3.0, -3.0], [-4.0, -4.0]]
+        traj1 = [[-1.0, -1.0, 0.0], [-2.0, -2.0, 0.0]]
+        traj2 = [[-3.0, -3.0, 0.0], [-4.0, -4.0, 0.0]]
 
         dist = traj_dist_rs.edwp(traj1, traj2, False)
         assert dist.distance > 0
@@ -95,8 +95,8 @@ class TestEDwPBoundaryCases(BaseDistanceTest):
 
     def test_edwp_large_coordinates(self):
         """Test EDwP with large coordinates"""
-        traj1 = [[1e6, 1e6], [1e6 + 1.0, 1e6 + 1.0]]
-        traj2 = [[1e6 + 10.0, 1e6 + 10.0], [1e6 + 11.0, 1e6 + 11.0]]
+        traj1 = [[1e6, 1e6, 0.0], [1e6 + 1.0, 1e6 + 1.0, 0.0]]
+        traj2 = [[1e6 + 10.0, 1e6 + 10.0, 0.0], [1e6 + 11.0, 1e6 + 11.0, 0.0]]
 
         dist = traj_dist_rs.edwp(traj1, traj2, False)
         assert dist.distance > 0
@@ -104,8 +104,8 @@ class TestEDwPBoundaryCases(BaseDistanceTest):
 
     def test_edwp_small_coordinates(self):
         """Test EDwP with small coordinates"""
-        traj1 = [[1e-6, 1e-6], [2e-6, 2e-6]]
-        traj2 = [[3e-6, 3e-6], [4e-6, 4e-6]]
+        traj1 = [[1e-6, 1e-6, 0.0], [2e-6, 2e-6, 0.0]]
+        traj2 = [[3e-6, 3e-6, 0.0], [4e-6, 4e-6, 0.0]]
 
         dist = traj_dist_rs.edwp(traj1, traj2, False)
         assert dist.distance > 0

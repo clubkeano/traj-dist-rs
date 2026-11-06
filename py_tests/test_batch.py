@@ -40,12 +40,12 @@ class TestMetricFactory:
 
     def test_metric_erp(self):
         """Test Metric.erp factory method"""
-        metric = traj_dist_rs.Metric.erp(g=[0.0, 1.0], type_d="euclidean")
+        metric = traj_dist_rs.Metric.erp(g=[0.0, 1.0, 0.0], type_d="euclidean")
         assert metric is not None
 
     def test_metric_erp_invalid_gap(self):
         """Test Metric.erp with invalid gap parameter"""
-        with pytest.raises(ValueError, match="must have at least 2 elements"):
+        with pytest.raises(ValueError, match="must have at least 3 elements"):
             traj_dist_rs.Metric.erp(g=[0.0], type_d="euclidean")
 
     def test_metric_invalid_distance_type(self):
@@ -65,9 +65,9 @@ class TestPdist:
     def test_pdist_simple_case(self):
         """Test pdist with simple case"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -83,9 +83,9 @@ class TestPdist:
     def test_pdist_with_numpy_arrays_zero_copy(self):
         """Test pdist with numpy arrays (zero-copy)"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -101,8 +101,8 @@ class TestPdist:
     def test_pdist_all_algorithms(self):
         """Test pdist with all supported algorithms"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         algorithms = [
@@ -121,8 +121,8 @@ class TestPdist:
     def test_pdist_with_lcss(self):
         """Test pdist with LCSS algorithm"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.lcss(eps=0.5, type_d="euclidean")
@@ -134,8 +134,8 @@ class TestPdist:
     def test_pdist_with_edr(self):
         """Test pdist with EDR algorithm"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.edr(eps=0.5, type_d="euclidean")
@@ -147,11 +147,11 @@ class TestPdist:
     def test_pdist_with_erp(self):
         """Test pdist with ERP algorithm"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
-        metric = traj_dist_rs.Metric.erp(g=[0.0, 0.0], type_d="euclidean")
+        metric = traj_dist_rs.Metric.erp(g=[0.0, 0.0, 0.0], type_d="euclidean")
         distances = traj_dist_rs.pdist(trajectories, metric=metric)
         assert len(distances) == 1
         assert np.all(np.isfinite(distances))
@@ -160,8 +160,8 @@ class TestPdist:
     def test_pdist_spherical(self):
         """Test pdist with spherical distance type"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="spherical")
@@ -173,9 +173,9 @@ class TestPdist:
     def test_pdist_parallel_vs_sequential(self):
         """Test that parallel and sequential produce the same results"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -191,7 +191,7 @@ class TestPdist:
     def test_pdist_invalid_input(self):
         """Test pdist with invalid input"""
         trajectories = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -205,12 +205,12 @@ class TestCdist:
     def test_cdist_simple_case(self):
         """Test cdist with simple case"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
-            np.array([[0.5, 1.5], [1.5, 0.5]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
+            np.array([[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -226,12 +226,12 @@ class TestCdist:
     def test_cdist_with_numpy_arrays_zero_copy(self):
         """Test cdist with numpy arrays (zero-copy)"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
-            np.array([[0.5, 1.5], [1.5, 0.5]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
+            np.array([[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -250,10 +250,10 @@ class TestCdist:
     def test_cdist_all_algorithms(self):
         """Test cdist with all supported algorithms"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         algorithms = [
@@ -274,10 +274,10 @@ class TestCdist:
     def test_cdist_with_lcss(self):
         """Test cdist with LCSS algorithm"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.lcss(eps=0.5, type_d="euclidean")
@@ -289,10 +289,10 @@ class TestCdist:
     def test_cdist_with_edr(self):
         """Test cdist with EDR algorithm"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.edr(eps=0.5, type_d="euclidean")
@@ -304,13 +304,13 @@ class TestCdist:
     def test_cdist_with_erp(self):
         """Test cdist with ERP algorithm"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
-        metric = traj_dist_rs.Metric.erp(g=[0.0, 0.0], type_d="euclidean")
+        metric = traj_dist_rs.Metric.erp(g=[0.0, 0.0, 0.0], type_d="euclidean")
         distances = traj_dist_rs.cdist(trajectories_a, trajectories_b, metric=metric)
         assert distances.shape == (1, 1)
         assert np.all(np.isfinite(distances))
@@ -319,10 +319,10 @@ class TestCdist:
     def test_cdist_spherical(self):
         """Test cdist with spherical distance type"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="spherical")
@@ -334,12 +334,12 @@ class TestCdist:
     def test_cdist_parallel_vs_sequential(self):
         """Test that parallel and sequential produce the same results"""
         trajectories_a = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
-            np.array([[0.0, 1.0], [1.0, 0.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
+            np.array([[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]),
         ]
         trajectories_b = [
-            np.array([[0.5, 0.5], [1.5, 1.5]]),
-            np.array([[0.5, 1.5], [1.5, 0.5]]),
+            np.array([[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]]),
+            np.array([[0.5, 1.5, 0.0], [1.5, 0.5, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -356,7 +356,7 @@ class TestCdist:
         """Test cdist with invalid input"""
         trajectories_a = []
         trajectories_b = [
-            np.array([[0.0, 0.0], [1.0, 1.0]]),
+            np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]),
         ]
 
         metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
@@ -371,7 +371,7 @@ class TestBatchPerformance:
         """Test pdist with larger dataset"""
         # Create 10 trajectories
         trajectories = [
-            np.array([[i * 0.1, i * 0.1], [(i + 1) * 0.1, (i + 1) * 0.1]])
+            np.array([[i * 0.1, i * 0.1, 0.0], [(i + 1) * 0.1, (i + 1) * 0.1, 0.0]])
             for i in range(10)
         ]
 
@@ -387,11 +387,11 @@ class TestBatchPerformance:
         """Test cdist with larger dataset"""
         # Create 5 trajectories in each collection
         trajectories_a = [
-            np.array([[i * 0.1, i * 0.1], [(i + 1) * 0.1, (i + 1) * 0.1]])
+            np.array([[i * 0.1, i * 0.1, 0.0], [(i + 1) * 0.1, (i + 1) * 0.1, 0.0]])
             for i in range(5)
         ]
         trajectories_b = [
-            np.array([[i * 0.2, i * 0.2], [(i + 1) * 0.2, (i + 1) * 0.2]])
+            np.array([[i * 0.2, i * 0.2, 0.0], [(i + 1) * 0.2, (i + 1) * 0.2, 0.0]])
             for i in range(5)
         ]
 

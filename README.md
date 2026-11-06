@@ -96,8 +96,8 @@ import numpy as np
 import traj_dist_rs
 
 # Define trajectories as list of [x, y] coordinates or numpy arrays
-traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
 # Calculate SSPD distance
 distance = traj_dist_rs.sspd(traj1, traj2, dist_type="euclidean")
@@ -112,7 +112,7 @@ distance = traj_dist_rs.hausdorff(traj1, traj2, dist_type="spherical")
 print(f"Hausdorff distance: {distance}")
 
 # Batch computation with pdist (pairwise distances)
-trajectories = [np.array([[0.0, 0.0], [1.0, 1.0]]) for _ in range(10)]
+trajectories = [np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]) for _ in range(10)]
 metric = traj_dist_rs.Metric.sspd(type_d="euclidean")
 distances = traj_dist_rs.pdist(trajectories, metric=metric, parallel=True)
 print(f"Computed {len(distances)} pairwise distances")
@@ -135,8 +135,8 @@ use traj_dist_rs::distance::distance_type::DistanceType;
 use traj_dist_rs::distance::batch::{pdist, Metric, DistanceAlgorithm};
 
 fn main() {
-    let traj1 = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-    let traj2 = vec![[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]];
+    let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+    let traj2 = vec![[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]];
 
     // Calculate SSPD distance
     let dist = sspd(&traj1, &traj2, DistanceType::Euclidean);
@@ -149,9 +149,9 @@ fn main() {
 
     // Batch computation with pdist
     let trajectories = vec![
-        vec![[0.0, 0.0], [1.0, 1.0]],
-        vec![[0.0, 1.0], [1.0, 0.0]],
-        vec![[0.5, 0.5], [1.5, 1.5]],
+        vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+        vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]],
+        vec![[0.5, 0.5, 0.0], [1.5, 1.5, 0.0]],
     ];
     let metric = Metric::new(DistanceAlgorithm::SSPD, DistanceType::Euclidean);
     let distances = pdist(&trajectories, &metric, true, true).unwrap();

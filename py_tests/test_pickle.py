@@ -17,8 +17,8 @@ class TestDpResultPickle:
 
     def test_dtw_result_pickle_without_matrix(self):
         """Test pickling DTW result without matrix"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.dtw(traj1, traj2, "euclidean", use_full_matrix=False)
 
@@ -34,8 +34,8 @@ class TestDpResultPickle:
 
     def test_dtw_result_pickle_with_matrix(self):
         """Test pickling DTW result with matrix"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.dtw(traj1, traj2, "euclidean", use_full_matrix=True)
 
@@ -52,8 +52,8 @@ class TestDpResultPickle:
 
     def test_lcss_result_pickle(self):
         """Test pickling LCSS result"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.lcss(
             traj1, traj2, "euclidean", eps=0.5, use_full_matrix=True
@@ -72,8 +72,8 @@ class TestDpResultPickle:
 
     def test_edr_result_pickle(self):
         """Test pickling EDR result"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.edr(
             traj1, traj2, "euclidean", eps=0.5, use_full_matrix=True
@@ -92,11 +92,11 @@ class TestDpResultPickle:
 
     def test_erp_result_pickle(self):
         """Test pickling ERP result"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.erp_standard(
-            traj1, traj2, "euclidean", g=[0.0, 0.0], use_full_matrix=True
+            traj1, traj2, "euclidean", g=[0.0, 0.0, 0.0], use_full_matrix=True
         )
 
         # Pickle and unpickle
@@ -112,8 +112,8 @@ class TestDpResultPickle:
 
     def test_discret_frechet_result_pickle(self):
         """Test pickling Discret Frechet result"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1], [2.1, 2.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0]]
 
         result = traj_dist_rs.discret_frechet(
             traj1, traj2, "euclidean", use_full_matrix=True
@@ -132,8 +132,8 @@ class TestDpResultPickle:
 
     def test_pickle_protocol_versions(self):
         """Test pickle serialization with different protocol versions"""
-        traj1 = [[0.0, 0.0], [1.0, 1.0]]
-        traj2 = [[0.1, 0.1], [1.1, 1.1]]
+        traj1 = [[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]
+        traj2 = [[0.1, 0.1, 0.0], [1.1, 1.1, 0.0]]
 
         result = traj_dist_rs.dtw(traj1, traj2, "euclidean", use_full_matrix=True)
 

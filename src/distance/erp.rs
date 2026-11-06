@@ -54,9 +54,9 @@ use crate::traits::AsCoord;
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
-/// let reference_point = [0.0, 0.0];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
+/// let reference_point = [0.0, 0.0, 0.0];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 /// let distance = erp_standard(&calculator, &reference_point, false);
@@ -192,9 +192,9 @@ pub fn erp_standard<D: DistanceCalculator, C: AsCoord>(
 /// use traj_dist_rs::distance::base::{DistanceCalculator, TrajectoryCalculator};
 /// use traj_dist_rs::distance::distance_type::DistanceType;
 ///
-/// let traj1 = vec![[0.0, 0.0], [1.0, 1.0]];
-/// let traj2 = vec![[0.0, 1.0], [1.0, 0.0]];
-/// let reference_point = [0.0, 0.0];
+/// let traj1 = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+/// let traj2 = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
+/// let reference_point = [0.0, 0.0, 0.0];
 ///
 /// let calculator = TrajectoryCalculator::new(&traj1, &traj2, DistanceType::Euclidean);
 /// let distance = erp_compat_traj_dist(&calculator, &reference_point, false);
@@ -494,9 +494,9 @@ mod tests {
 
     #[test]
     fn test_erp_euclidean_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calc_compat = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_standard = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -515,9 +515,9 @@ mod tests {
 
     #[test]
     fn test_erp_euclidean_different_lengths() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calc_compat = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_standard = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -540,9 +540,9 @@ mod tests {
 
     #[test]
     fn test_erp_euclidean_identical() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calc_compat = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_standard = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -566,9 +566,9 @@ mod tests {
 
     #[test]
     fn test_erp_spherical_simple() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calc_compat = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
         let calc_standard = TrajectoryCalculator::new(&t0, &t1, DistanceType::Spherical);
@@ -588,9 +588,9 @@ mod tests {
     #[test]
     fn test_erp_difference_between_implementations() {
         // Test to verify the difference between the two implementations
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calc_compat_euclidean = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let calc_standard_euclidean = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
@@ -618,9 +618,9 @@ mod tests {
 
     #[test]
     fn test_erp_consistency_between_modes_standard() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let dist_optimized = erp_standard(&calculator, &g, false);
@@ -632,9 +632,9 @@ mod tests {
 
     #[test]
     fn test_erp_consistency_between_modes_compat() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 2.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0], [2.0, 3.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [2.0, 3.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let calculator = TrajectoryCalculator::new(&t0, &t1, DistanceType::Euclidean);
         let dist_optimized = erp_compat_traj_dist(&calculator, &g, false);
@@ -646,9 +646,9 @@ mod tests {
 
     #[test]
     fn test_erp_with_precomputed_distances() {
-        let t0: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0]];
-        let t1: Vec<[f64; 2]> = vec![[0.0, 1.0], [1.0, 0.0]];
-        let g = [0.0, 0.0];
+        let t0: Vec<[f64; 3]> = vec![[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]];
+        let t1: Vec<[f64; 3]> = vec![[0.0, 1.0, 0.0], [1.0, 0.0, 0.0]];
+        let g = [0.0, 0.0, 0.0];
 
         let distance_matrix =
             crate::distance::utils::precompute_distance_matrix(&t0, &t1, DistanceType::Euclidean);

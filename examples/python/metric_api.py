@@ -13,11 +13,11 @@ print("Metric API Examples")
 print("=" * 60)
 
 # Create sample trajectories
-traj1 = np.array([[0.0, 0.0], [1.0, 1.0], [2.0, 2.0], [3.0, 3.0]])
+traj1 = np.array([[0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [2.0, 2.0, 0.0], [3.0, 3.0, 0.0]])
 
-traj2 = np.array([[0.1, 0.1], [1.1, 1.1], [2.1, 2.1], [3.1, 3.1]])
+traj2 = np.array([[0.1, 0.1, 0.0], [1.1, 1.1, 0.0], [2.1, 2.1, 0.0], [3.1, 3.1, 0.0]])
 
-traj3 = np.array([[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0]])
+traj3 = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0], [3.0, 0.0, 0.0]])
 
 # Example 1: Creating Metrics using factory methods
 print("\n1. Creating Metrics using Factory Methods")
@@ -59,9 +59,9 @@ result = traj_dist_rs.edr(traj1, traj2, "euclidean", 0.2, use_full_matrix=False)
 print(f"  EDR (epsilon=0.2): distance = {result.distance:.6f}")
 
 # ERP with gap point
-metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 0.0], type_d="euclidean")
+metric_erp = traj_dist_rs.Metric.erp(g=[0.0, 0.0, 0.0], type_d="euclidean")
 result = traj_dist_rs.erp_standard(
-    traj1, traj2, "euclidean", [0.0, 0.0], use_full_matrix=False
+    traj1, traj2, "euclidean", [0.0, 0.0, 0.0], use_full_matrix=False
 )
 print(f"  ERP (gap=[0,0]): distance = {result.distance:.6f}")
 
@@ -70,7 +70,7 @@ print("\n4. Using Metrics with Batch Computation")
 print("-" * 60)
 
 # Create a set of trajectories
-trajectories = [np.random.rand(10, 2) * 5 for _ in range(10)]
+trajectories = [np.random.rand(10, 3) * 5 for _ in range(10)]
 
 # Compute pairwise distances using different metrics
 batch_metrics = [
@@ -123,7 +123,7 @@ print("\n7. Using Metrics with pdist for Large Datasets")
 print("-" * 60)
 
 # Create a larger set of trajectories
-large_trajectories = [np.random.rand(20, 2) * 10 for _ in range(20)]
+large_trajectories = [np.random.rand(20, 3) * 10 for _ in range(20)]
 
 # Use different metrics with pdist
 metrics = [
